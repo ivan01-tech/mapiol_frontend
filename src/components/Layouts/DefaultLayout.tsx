@@ -36,9 +36,9 @@ export default function DefaultLayout({
   });
 
   console.log("path : ", pathname);
-  const areProtected = pathname.split("/").includes("auth");
+  const areNotrotected = pathname.split("/").includes("auth");
   // TODO create a route for sign up and login
-  console.log("is protected : ", areProtected);
+  console.log("is protected : ", areNotrotected);
 
   // TODO create a route for sign up and login
   useEffect(
@@ -47,7 +47,6 @@ export default function DefaultLayout({
         console.log("Main layout data : ", isSuccess, dataSingUp);
         dispatch(addUserInfo(dataSingUp));
         toast.success("success!");
-        router.push("/");
       }
     },
     [isSuccess, dataSingUp, router, dispatch],
@@ -55,14 +54,17 @@ export default function DefaultLayout({
 
   useEffect(
     function () {
-      if (isError) {
+      if (isError && !areNotrotected) {
         console.log("error : ", error);
         dispatch(clearUser());
-        toast.error(error?.message || "");
+        toast.error(
+          error?.message || "You nedd to be logged in to access this route",
+        );
+        router.push("/auth/signin");
         return;
       }
     },
-    [dispatch, isError, error?.message, error],
+    [dispatch, isError, error?.message, error, router, areNotrotected],
   );
 
   return (
