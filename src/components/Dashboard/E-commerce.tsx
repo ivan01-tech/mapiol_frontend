@@ -1,5 +1,10 @@
 "use client";
 import React from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { selectUser } from "@/redux/userSlice";
+import { usePathname, useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 import ChartOne from "../Charts/ChartOne";
 import ChartThree from "../Charts/ChartThree";
 import ChartTwo from "../Charts/ChartTwo";
@@ -9,6 +14,25 @@ import CardDataStats from "../CardDataStats";
 import MapOne from "../Maps/MapOne";
 
 const ECommerce: React.FC = () => {
+
+
+  // const isNotProtect = ["signup", "signin"].includes(pathname);
+
+  // console.log("pathname : ", pathname);
+
+  // useEffect(
+  //   function () {
+  //     if (typeof window == "undefined") return;
+
+  //     fetchUser();
+
+  //     // if (!user) {
+  //     //   toast.error("you must be logged in to access this page");
+  //     //   return router.push("/auth/signin");
+  //     // }
+  //   },
+  //   [isNotProtect, router, user],
+  // );
   return (
     <>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">

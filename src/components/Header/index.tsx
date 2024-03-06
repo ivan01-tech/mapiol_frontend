@@ -4,6 +4,8 @@ import DropdownMessage from "./DropdownMessage";
 import DropdownNotification from "./DropdownNotification";
 import DropdownUser from "./DropdownUser";
 import Image from "next/image";
+import { useSelector } from "react-redux";
+import { selectUser } from "@/redux/userSlice";
 
 const Header = (props: {
   sidebarOpen: string | boolean | undefined;

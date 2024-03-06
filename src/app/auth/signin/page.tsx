@@ -1,20 +1,80 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import { Metadata } from "next";
-import DefaultLayout from "@/components/Layouts/DefaultLayout";
-
-export const metadata: Metadata = {
-  title: "Next.js SignIn Page | TailAdmin - Next.js Dashboard Template",
-  description: "This is Next.js Signin Page TailAdmin Dashboard Template",
-};
+import toast from "react-hot-toast";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { UserType } from "@/types/users";
+import { useMutation } from "@tanstack/react-query";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
+import { registerUser } from "@/app/services/users.service";
+import { UserLogin, UserLoginType } from "@/models/UserLoginType";
+import { addUserInfo, clearUser } from "@/redux/userSlice";
+import { loginUser } from "@/services/users.services";
 
 const SignIn: React.FC = () => {
-  return (
-    <DefaultLayout>
-      <Breadcrumb pageName="Sign In" />
+  const [phone, setPhone] = useState("");
+  const dispatch = useDispatch();
+  const router = useRouter();
+  // Mutations
+  const {
+    mutate,
+    isError,
+    isSuccess,
+    isPending,
+    error,
+    data: dataSingUp,
+  } = useMutation({
+    mutationFn: loginUser<UserType>,
+    mutationKey: ["loginUser"],
+  });
 
+  const {
+    register,
+    handleSubmit,
+    trigger,
+    setValue,
+    formState: { errors },
+  } = useForm<UserLoginType>({
+    resolver: zodResolver(UserLogin),
+  });
+
+  const onSubmit: SubmitHandler<UserLoginType> = (user) => {
+    console.log("first form  : ", user);
+    mutate(user);
+  };
+
+  // TODO create a route for sign up and login
+  useEffect(
+    function () {
+      if (isSuccess) {
+        console.log("Main layout data : ", isSuccess, dataSingUp);
+        dispatch(addUserInfo(dataSingUp));
+        toast.success("success!");
+        router.back();
+      }
+    },
+    [isSuccess, dataSingUp, router, dispatch],
+  );
+
+  useEffect(
+    function () {
+      if (isError) {
+        console.log("error : ", error);
+        dispatch(clearUser());
+        toast.error(error?.message || "");
+        return;
+      }
+    },
+    [dispatch, isError, error?.message, error],
+  );
+
+  return (
+    <>
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="flex flex-wrap items-center">
           <div className="hidden w-full xl:block xl:w-1/2">
@@ -170,10 +230,10 @@ const SignIn: React.FC = () => {
             <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
               <span className="mb-1.5 block font-medium">Start for free</span>
               <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
-                Sign In to TailAdmin
+                Sign In to Mapiol
               </h2>
 
-              <form>
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
                     Email
@@ -181,6 +241,7 @@ const SignIn: React.FC = () => {
                   <div className="relative">
                     <input
                       type="email"
+                      {...register("email", { required: true })}
                       placeholder="Enter your email"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
@@ -203,15 +264,21 @@ const SignIn: React.FC = () => {
                       </svg>
                     </span>
                   </div>
+                  {errors.email && (
+                    <p className="text-[.7rem] text-red">
+                      {errors.email.message}
+                    </p>
+                  )}
                 </div>
 
                 <div className="mb-6">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
-                    Re-type Password
+                    Password
                   </label>
                   <div className="relative">
                     <input
                       type="password"
+                      {...register("password", { required: true })}
                       placeholder="6+ Characters, 1 Capital letter"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-white outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
@@ -238,6 +305,11 @@ const SignIn: React.FC = () => {
                       </svg>
                     </span>
                   </div>
+                  {errors.password && (
+                    <p className="text-[.7rem] text-red">
+                      {errors.password.message}
+                    </p>
+                  )}
                 </div>
 
                 <div className="mb-5">
@@ -248,7 +320,7 @@ const SignIn: React.FC = () => {
                   />
                 </div>
 
-                <button className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50">
+                {/* <button className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50">
                   <span>
                     <svg
                       width="20"
@@ -283,7 +355,7 @@ const SignIn: React.FC = () => {
                     </svg>
                   </span>
                   Sign in with Google
-                </button>
+                </button> */}
 
                 <div className="mt-6 text-center">
                   <p>
@@ -298,7 +370,7 @@ const SignIn: React.FC = () => {
           </div>
         </div>
       </div>
-    </DefaultLayout>
+    </>
   );
 };
 

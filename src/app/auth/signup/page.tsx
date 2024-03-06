@@ -1,27 +1,93 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 
-import { Metadata } from "next";
-import DefaultLayout from "@/components/Layouts/DefaultLayout";
-
-export const metadata: Metadata = {
-  title: "Next.js SignUp Page | TailAdmin - Next.js Dashboard Template",
-  description: "This is Next.js SignUp Page TailAdmin Dashboard Template",
-  // other metadata
-};
+import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { UserSignUp, UserSignUpType } from "@/models/UserSignUp";
+import PhoneInputWithCountrySelect from "react-phone-number-input";
+import { PhoneInput } from "react-international-phone";
+import { registerUser } from "@/app/services/users.service";
+import { UserType } from "@/types/users";
+import { useDispatch } from "react-redux";
+import { addUserInfo } from "@/redux/userSlice";
 
 const SignUp: React.FC = () => {
-  return (
-    <DefaultLayout>
-      <Breadcrumb pageName="Sign Up" />
+  const [phone, setPhone] = useState("");
+  const dispatch = useDispatch();
+  const router = useRouter();
+  // Mutations
+  const {
+    mutate,
+    isError,
+    isSuccess,
+    isPending,
+    error,
+    data: dataSingUp,
+  } = useMutation({
+    mutationFn: registerUser<UserType>,
+    onSuccess: () => {
+      router.push("/");
+    },
+    onError: () => {
+      toast.error(error?.message || "Something went wrong !  please try again");
+    },
+  });
 
+  const {
+    register,
+    handleSubmit,
+    trigger,
+    setValue,
+    formState: { errors },
+  } = useForm<UserSignUpType>({
+    resolver: zodResolver(UserSignUp),
+  });
+
+  const onSubmit: SubmitHandler<UserSignUpType> = (user) => {
+    console.log("first form  : ", user);
+    mutate(user);
+  };
+
+  // TODO create a route for sign up and login
+  useEffect(
+    function () {
+      if (!isSuccess) {
+        // setUser(null);
+        toast.error("Something went wrong !");
+        return;
+      }
+
+      console.log("Main layout data : ", isSuccess, dataSingUp);
+      // dispatch(addUserInfo(dataSingUp));
+      toast.success("success!");
+      router.push("/");
+    },
+    [isSuccess, dataSingUp, router, dispatch],
+  );
+
+  // TODO create a route for sign up and login
+  useEffect(
+    function () {
+      if (!isError) return;
+
+      toast.error(error.message);
+    },
+    [error, isError],
+  );
+
+  return (
+    <>
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="flex flex-wrap items-center">
           <div className="hidden w-full xl:block xl:w-1/2">
             <div className="px-26 py-17.5 text-center">
-              <Link className="mb-5.5 inline-block" href="/">
+              <Link className="mb-2.5 inline-block" href="/">
                 <Image
                   className="hidden dark:block"
                   src={"/images/logo/logo.svg"}
@@ -168,25 +234,26 @@ const SignUp: React.FC = () => {
           </div>
 
           <div className="w-full border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2">
-            <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
+            <div className="w-full p-2 sm:p-12.5 xl:p-17.5">
               <span className="mb-1.5 block font-medium">Start for free</span>
               <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
-                Sign Up to TailAdmin
+                Sign Up to Mapiol
               </h2>
 
-              <form>
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
-                    Name
+                    Nom
                   </label>
                   <div className="relative">
                     <input
                       type="text"
+                      {...register("nom", { required: true })}
                       placeholder="Enter your full name"
-                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      className="w-full  rounded-lg border border-stroke bg-transparent py-2 pl-4 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
 
-                    <span className="absolute right-4 top-4">
+                    <span className="absolute right-4 top-2">
                       <svg
                         className="fill-current"
                         width="22"
@@ -208,6 +275,11 @@ const SignUp: React.FC = () => {
                       </svg>
                     </span>
                   </div>
+                  {errors.nom && (
+                    <p className="text-[.7rem] text-red">
+                      {errors.nom.message}
+                    </p>
+                  )}
                 </div>
 
                 <div className="mb-4">
@@ -216,12 +288,13 @@ const SignUp: React.FC = () => {
                   </label>
                   <div className="relative">
                     <input
+                      {...register("email", { required: true })}
                       type="email"
                       placeholder="Enter your email"
-                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      className="w-full rounded-lg border border-stroke bg-transparent py-2 pl-4 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
 
-                    <span className="absolute right-4 top-4">
+                    <span className="absolute right-4 top-2">
                       <svg
                         className="fill-current"
                         width="22"
@@ -238,6 +311,12 @@ const SignUp: React.FC = () => {
                         </g>
                       </svg>
                     </span>
+
+                    {errors.email && (
+                      <p className="text-[.7rem] text-red">
+                        {errors.email.message}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -248,11 +327,12 @@ const SignUp: React.FC = () => {
                   <div className="relative">
                     <input
                       type="password"
+                      {...register("password", { required: true })}
                       placeholder="Enter your password"
-                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      className="w-full rounded-lg border border-stroke bg-transparent py-2 pl-4 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
 
-                    <span className="absolute right-4 top-4">
+                    <span className="absolute right-4 top-2">
                       <svg
                         className="fill-current"
                         width="22"
@@ -274,6 +354,11 @@ const SignUp: React.FC = () => {
                       </svg>
                     </span>
                   </div>
+                  {errors.password && (
+                    <p className="text-[.7rem] text-red">
+                      {errors.password.message}
+                    </p>
+                  )}
                 </div>
 
                 <div className="mb-6">
@@ -283,11 +368,12 @@ const SignUp: React.FC = () => {
                   <div className="relative">
                     <input
                       type="password"
+                      {...register("confirm_password", { required: true })}
                       placeholder="Re-enter your password"
-                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      className="w-full rounded-lg border border-stroke bg-transparent py-2 pl-4 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
 
-                    <span className="absolute right-4 top-4">
+                    <span className="absolute right-4 top-2">
                       <svg
                         className="fill-current"
                         width="22"
@@ -309,17 +395,118 @@ const SignUp: React.FC = () => {
                       </svg>
                     </span>
                   </div>
+                  {errors.confirm_password && (
+                    <p className="text-[.7rem] text-red">
+                      {errors.confirm_password.message}
+                    </p>
+                  )}
                 </div>
 
-                <div className="mb-5">
+                <div className="mb-6">
+                  <label className="mb-2.5 block font-medium text-black dark:text-white">
+                    Numéro de téléphone{" "}
+                  </label>
+                  <div className="relative">
+                    <PhoneInput
+                      defaultCountry="cm"
+                      onChange={(act, { country }) => {
+                        console.log("first : ", act, country);
+                        setPhone(act);
+                        // TODO set the country_code
+                        setValue("code", country.dialCode);
+                        setValue("telephone", act);
+                      }}
+                      value={phone}
+                      className="w-full rounded-lg border border-stroke bg-transparent py-2 pl-4 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                    />
+
+                    {/* <PhoneInputWithCountrySelect
+                      placeholder="Enter phone number"
+                      value={phone}
+                      defaultCountry="CM"
+                      countryCallingCodeEditable={true}
+                      onChange={(act) => {
+                        if (!act) return;
+                        setPhone(act?.toString());
+                        console.log("first : ", act);
+                        setValue("telephone", act);
+                      }}
+                    /> */}
+                  </div>
+                  {errors.telephone && (
+                    <p className="text-[.7rem] text-red">
+                      {errors.telephone.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="mb-6">
+                  <label className="mb-2.5 block font-medium text-black dark:text-white">
+                    Login
+                  </label>
+                  <div className="relative">
+                    <input
+                      {...register("login", { required: true })}
+                      type="text"
+                      placeholder="Re-enter your password"
+                      className="w-full rounded-lg border border-stroke bg-transparent py-2 pl-4 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                    />
+                  </div>
+                  {errors.login && (
+                    <p className="text-[.7rem] text-red">
+                      {errors.login.message}
+                    </p>
+                  )}
+                </div>
+                <div className="mb-6">
+                  <label className="mb-2.5 block font-medium text-black dark:text-white">
+                    Adresse
+                  </label>
+                  <div className="relative">
+                    <input
+                      {...register("adresse", { required: true })}
+                      type="text"
+                      placeholder="Adresse"
+                      className="w-full rounded-lg border border-stroke bg-transparent py-2 pl-4 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                    />
+                  </div>
+                  {errors.adresse && (
+                    <p className="text-[.7rem] text-red">
+                      {errors.adresse.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="mb-6">
+                  <label className="mb-2.5 block font-medium text-black dark:text-white">
+                    Sexe
+                  </label>
+                  <div className="relative">
+                    <select
+                      {...register("sexe", { required: true })}
+                      id=""
+                      className="w-full rounded-lg border border-stroke bg-transparent py-2 pl-4 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                    >
+                      <option value="Homme">Homme</option>
+                      <option value="Femme">Femme</option>
+                      <option value="Autre">Autre</option>
+                    </select>
+                  </div>
+                  {errors.sexe && (
+                    <p className="text-[.7rem] text-red">
+                      {errors.sexe.message}
+                    </p>
+                  )}
+                </div>
+                <div className="mb-2">
                   <input
                     type="submit"
                     value="Create account"
-                    className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
+                    className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-2 text-white transition hover:bg-opacity-90"
                   />
                 </div>
 
-                <button className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50">
+                {/* <button className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray p-2 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50">
                   <span>
                     <svg
                       width="20"
@@ -354,7 +541,7 @@ const SignUp: React.FC = () => {
                     </svg>
                   </span>
                   Sign up with Google
-                </button>
+                </button> */}
 
                 <div className="mt-6 text-center">
                   <p>
@@ -369,7 +556,7 @@ const SignUp: React.FC = () => {
           </div>
         </div>
       </div>
-    </DefaultLayout>
+    </>
   );
 };
 
