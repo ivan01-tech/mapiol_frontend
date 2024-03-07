@@ -2,9 +2,12 @@
 
 import ECommerce from "@/components/Dashboard/E-commerce";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
+import { isAuthenticated } from "@/lib/Auth";
+import isAuth from "@/lib/isAuth";
+import { redirect } from "next/navigation";
+import { useLayoutEffect } from "react";
 
-
-export default function Home() {
+function Home() {
   return (
     <>
       <DefaultLayout>
@@ -13,3 +16,5 @@ export default function Home() {
     </>
   );
 }
+
+export default isAuth(Home);

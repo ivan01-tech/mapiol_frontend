@@ -54,7 +54,7 @@ const SignIn: React.FC = () => {
       if (isSuccess) {
         console.log("Main layout data : ", isSuccess, dataSingUp);
         dispatch(addUserInfo(dataSingUp));
-        toast.success("success!");
+        toast.success("successful login !");
         router.back();
       }
     },
