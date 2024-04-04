@@ -1,12 +1,16 @@
 export const URLS = {
   USERS: {
     CREATE: "/users",
+    INDEX: "/users",
     REGISTER: "/users/register",
+    LOGIN: "/users/login",
     CREATE_LOGIN: "/users/createAndLogin",
+    GET_STATUS: "/users/check-auth",
   },
   AUTH: {
     LOGIN: "/auth/login",
-    GET_STATUS: "/auth/profile",
+    GET_STATUS: "/users/check-auth",
+    LOGOUT: "/auth/logout",
     GET_STATUS_GOOGLE: "/auth/google/success",
   },
   PRODUCTS: {

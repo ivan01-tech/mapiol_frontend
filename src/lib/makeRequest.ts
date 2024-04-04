@@ -2,7 +2,7 @@ import { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { axiosAuth, axiosNoAuth } from "./axios";
 
 export interface RequestRetturn<W> {
-  status: string;
+  statusCode: number;
   message?: string;
   data: W;
 }
@@ -10,48 +10,59 @@ export interface RequestRetturn<W> {
  * Une fonction pour effectuer n'importe quel type de requête avec l'instance Axios.
  */
 type U = {};
-// export async function makeRequest<T>(
-//   url: string,
-//   options: AxiosRequestConfig
-// ): Promise<T> {
-//   return axiosAuth(url, options)
-//     .then((res: AxiosResponse) => {
-//       if (res.data.status.toLocaleLowerCase() === "error") {
-//         console.log("status: " + res);
-//         return Promise.reject(res);
-//       }
-//       const data = res.data;
-//       // TODO à supprimer
-//       console.log("data : ", data, url);
-//       return data;
-//     })
-//     .catch((err: AxiosError) => {
-//       console.log("erreur : ", err);
-//       return Promise.reject({ message: err.message });
-//     });
-// }
-
-// /**
-//  * Une fonction pour effectuer n'importe quel type de requête avec l'instance Axios.
-//  */
 export async function makeSucureRequest<T = any>(
   url: string,
   options: AxiosRequestConfig,
 ): Promise<T> {
   return axiosAuth(url, options)
     .then((res: AxiosResponse<RequestRetturn<T>>) => {
-      if (res.data.status.toLocaleLowerCase() === "error") {
-        console.log("status: " + res);
-        return Promise.reject(res);
+      console.log("response : ", res);
+
+      if (res.data.statusCode >= 400) {
+        return Promise.reject({ message: res.data.message });
       }
+
       const data = res.data.data;
-      // TODO à supprimer
-      console.log("data : ", data, url);
+      console.log("data : ", data);
       return data;
     })
     .catch((err: AxiosError) => {
+      console.log("response : ", err);
+
       const msg =
         (err.response?.data as { message: string }).message || err.message;
+
+      console.log("erreur  ", msg);
+      return Promise.reject({ message: msg });
+    });
+}
+
+/**
+ * Une fonction pour effectuer n'importe quel type de requête avec l'instance Axios.
+ */
+export async function makeRequest<T = any>(
+  url: string,
+  options: AxiosRequestConfig,
+): Promise<T> {
+  return axiosNoAuth(url, options)
+    .then((res: AxiosResponse<RequestRetturn<T>>) => {
+      if (res.data.statusCode == 500) {
+        console.log("response : ", res);
+        return Promise.reject({ message: res.data.message });
+      }
+      if (res.data.statusCode >= 400) {
+        console.log("response : ", res);
+        return Promise.reject({ message: res.data.message });
+      }
+
+      const data = res.data.data;
+      console.log("data : ", data);
+      return data;
+    })
+    .catch((err: AxiosError) => {
+      console.log("response : ", err);
+
+      const msg = err.message;
 
       console.log("erreur  ", msg);
       return Promise.reject({ message: msg });

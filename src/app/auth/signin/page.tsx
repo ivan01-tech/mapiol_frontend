@@ -15,6 +15,7 @@ import { registerUser } from "@/app/services/users.service";
 import { UserLogin, UserLoginType } from "@/models/UserLoginType";
 import { addUserInfo, clearUser } from "@/redux/userSlice";
 import { loginUser } from "@/services/users.services";
+import { ButtonLoading } from "@/components/ui/BuutonLoading";
 
 const SignIn: React.FC = () => {
   const [phone, setPhone] = useState("");
@@ -277,10 +278,15 @@ const SignIn: React.FC = () => {
                   </label>
                   <div className="relative">
                     <input
+                      // type="password"
+                      // {...register("password", { required: true })}
+                      // placeholder=""
+                      // className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-white outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input  dark:focus:border-primary"
+
                       type="password"
                       {...register("password", { required: true })}
-                      placeholder="6+ Characters, 1 Capital letter"
-                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-white outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      placeholder="Enter your password"
+                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
 
                     <span className="absolute right-4 top-4">
@@ -312,12 +318,16 @@ const SignIn: React.FC = () => {
                   )}
                 </div>
 
-                <div className="mb-5">
-                  <input
-                    type="submit"
-                    value="Sign In"
-                    className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
-                  />
+                <div className="mb-5 flex items-center justify-center">
+                  {isPending ? (
+                    <ButtonLoading />
+                  ) : (
+                    <input
+                      type="submit"
+                      value="Sign In"
+                      className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
+                    />
+                  )}
                 </div>
 
                 {/* <button className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50">

@@ -1,4 +1,4 @@
-import { makeSucureRequest } from "@/lib/makeRequest";
+import { makeRequest, makeSucureRequest } from "@/lib/makeRequest";
 import { URLS } from "@/lib/url";
 
 export async function createUser(data: Object) {
@@ -22,8 +22,35 @@ export async function loginUser<T>(data: Object) {
   });
 }
 
+export async function registerUser<T>(data: Object) {
+  return makeRequest<T>(URLS.USERS.REGISTER, {
+    data,
+    method: "POST",
+  });
+}
+
+
+export async function loginAdminUser<T>(data: Object) {
+  return makeRequest<T>(URLS.USERS.LOGIN, {
+    data,
+    method: "POST",
+  });
+}
+
+export async function logoutUser<T>() {
+  return makeSucureRequest<T>(URLS.AUTH.LOGOUT, {
+    method: "GET",
+  });
+}
+
 export async function getUserStatus<T>() {
-  return makeSucureRequest<T>(URLS.AUTH.GET_STATUS, {
+  return makeSucureRequest<T>(URLS.USERS.GET_STATUS, {
+    method: "GET",
+  });
+}
+
+export async function getAllUser<T>() {
+  return makeSucureRequest<T>(URLS.USERS.INDEX, {
     method: "GET",
   });
 }

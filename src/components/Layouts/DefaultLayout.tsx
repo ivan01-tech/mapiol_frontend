@@ -1,15 +1,17 @@
 "use client";
 import { UserType } from "@/types/users";
-import { useLayoutEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import toast from "react-hot-toast";
 import { usePathname, useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
-import { addUserInfo } from "@/redux/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addUserInfo, clearUser, selectUser } from "@/redux/userSlice";
 import React, { useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import { getUserStatus } from "@/services/users.services";
 import { UserRoles } from "@/lib/utils";
+import Loader from "../common/Loader";
+import { useQuery } from "@tanstack/react-query";
 
 export default function DefaultLayout({
   children,
@@ -23,16 +25,20 @@ export default function DefaultLayout({
   const pathname = usePathname();
   const router = useRouter();
 
-  // const {
-  //   isError,
-  //   isSuccess,
-  //   isPending,
-  //   error,
-  //   data: dataSingUp,
-  // } = useQuery({
-  //   queryFn: getUserStatus<UserType>,
-  //   queryKey: ["userStatus"],
-  // });
+  const {
+    isError,
+    isSuccess,
+    isLoadingError,
+    isPending,
+    isFetching,
+    isPaused,
+    error,
+    isLoading,
+    data: dataSingUp,
+  } = useQuery({
+    queryFn: getUserStatus<UserType>,
+    queryKey: ["userStatus"],
+  });
 
   // console.log("path : ", pathname);
   const areNotrotected = pathname.split("/").includes("auth");
@@ -40,54 +46,74 @@ export default function DefaultLayout({
   // console.log("is protected : ", areNotrotected);
 
   // TODO create a route for sign up and login
-  // useEffect(
-  //   function () {
-  //     if (isSuccess) {
-  //       console.log("Main layout data : ", isSuccess, dataSingUp);
-  //       dispatch(addUserInfo(dataSingUp));
-  //       toast.success("success!");
-  //     }
-  //   },
-  //   [isSuccess, dataSingUp, router, dispatch],
-  // );
+  useEffect(
+    function () {
+      if (isSuccess) {
+        console.log("Main layout data : ", isSuccess, dataSingUp);
 
-  // useEffect(
-  //   function () {
-  //     if (isError && !areNotrotected) {
-  //       console.log("error : ", error);
-  //       dispatch(clearUser());
-  //       toast.error(
-  //         error?.message || "You nedd to be logged in to access this route",
-  //       );
-  //       router.push("/auth/signin");
-  //       return;
-  //     }
-  //   },
-  //   [dispatch, isError, error?.message, error, router, areNotrotected],
-  // );
-
-  useLayoutEffect(() => {
-    (async () => {
-      try {
-        const res = await getUserStatus<UserType>();
-        if (res.roles == UserRoles.is_admin) {
-          dispatch(addUserInfo(res));
+        if (dataSingUp.roles == UserRoles.is_admin) {
+          dispatch(addUserInfo(dataSingUp));
         } else {
           toast.error("this page requires the user to be an administrator");
           return router.push("/auth/signin");
         }
-      } catch (error) {
+      }
+    },
+    [isSuccess, dataSingUp, router, dispatch],
+  );
+
+  useEffect(
+    function () {
+      if (isError) {
+        // toast.error(
+        //   error?.message || "You nedd to be logged in to access this route",
+        //   );
+        //   router.push("/auth/signin");
+
         if (!areNotrotected) {
+          dispatch(clearUser());
           console.log("error : ", error);
           toast.error(
             (error as Error).message ||
               "You need to be connected to access this route",
           );
-          return router.push("/auth/signin");
+          router.push("/auth/signin");
         }
       }
-    })();
-  }, [areNotrotected, dispatch, router]);
+    },
+    [dispatch, isError, error?.message, error, router, areNotrotected],
+  );
+  // const pathname = usePathname();
+
+  // useLayoutEffect(() => {
+  //   (async () => {
+  //     setLoading(true);
+  //     try {
+  //       const res = await getUserStatus<UserType>();
+  //       if (res.roles == UserRoles.is_admin) {
+  //         dispatch(addUserInfo(res));
+  //       } else {
+  //         toast.error("this page requires the user to be an administrator");
+  //         return router.push("/auth/signin");
+  //       }
+  //     } catch (error) {
+  //       if (!areNotrotected) {
+  //         console.log("error : ", error);
+  //         toast.error(
+  //           (error as Error).message ||
+  //             "You need to be connected to access this route",
+  //         );
+  //         return router.push("/auth/signin");
+  //       }
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   })();
+  // }, [areNotrotected, dispatch, router]);
+
+  if (isPending || isLoading || isFetching || isLoadingError || isPaused) {
+    return <Loader />;
+  }
 
   return (
     <>

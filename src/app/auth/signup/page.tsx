@@ -16,6 +16,7 @@ import { registerUser } from "@/app/services/users.service";
 import { UserType } from "@/types/users";
 import { useDispatch } from "react-redux";
 import { addUserInfo } from "@/redux/userSlice";
+import { ButtonLoading } from "@/components/ui/BuutonLoading";
 
 const SignUp: React.FC = () => {
   const [phone, setPhone] = useState("");
@@ -31,6 +32,7 @@ const SignUp: React.FC = () => {
     data: dataSingUp,
   } = useMutation({
     mutationFn: registerUser<UserType>,
+    mutationKey: ["registerUser"],
     onSuccess: () => {
       router.push("/");
     },
@@ -440,7 +442,7 @@ const SignUp: React.FC = () => {
                   )}
                 </div>
 
-                <div className="mb-6">
+                {/* <div className="mb-6">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
                     Login
                   </label>
@@ -457,7 +459,7 @@ const SignUp: React.FC = () => {
                       {errors.login.message}
                     </p>
                   )}
-                </div>
+                </div> */}
                 <div className="mb-6">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
                     Adresse
@@ -489,7 +491,6 @@ const SignUp: React.FC = () => {
                     >
                       <option value="Homme">Homme</option>
                       <option value="Femme">Femme</option>
-                      <option value="Autre">Autre</option>
                     </select>
                   </div>
                   {errors.sexe && (
@@ -499,11 +500,17 @@ const SignUp: React.FC = () => {
                   )}
                 </div>
                 <div className="mb-2">
-                  <input
-                    type="submit"
-                    value="Create account"
-                    className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-2 text-white transition hover:bg-opacity-90"
-                  />
+                  <div className="mb-5 flex items-center justify-center">
+                    {isPending ? (
+                      <ButtonLoading />
+                    ) : (
+                      <input
+                        type="submit"
+                        value="Sign In"
+                        className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
+                      />
+                    )}
+                  </div>
                 </div>
 
                 {/* <button className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray p-2 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50">

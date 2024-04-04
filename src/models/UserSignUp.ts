@@ -1,4 +1,3 @@
-import { AfricanCountryCode, CountryCo } from "@/lib/CountryCode";
 import { isValidPhoneNumber } from "@/lib/isValidPhone";
 import { CountryCode } from "libphonenumber-js";
 
@@ -20,7 +19,7 @@ export const UserSignUp = z
     // roles: z.array(z.enum(["ADMIN", "USER"])).default(["USER"]),
     // password: z.string(),
     adresse: z.string().min(4).max(15),
-    login: z.string().min(4).max(15),
+    // login: z.string().min(4).max(15),
     sexe: sexeEnum,
     telephone: z.string(),
     code: z.string(),

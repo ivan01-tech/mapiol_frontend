@@ -12,7 +12,7 @@ import { Provider } from "react-redux";
 import { store } from "@/redux/store";
 import { Toaster } from "react-hot-toast";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 export default function RootLayout({
   children,
@@ -20,13 +20,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  // const pathname = usePathname();
-
-  useEffect(() => {
-    setTimeout(() => setLoading(false), 1000);
-  }, []);
 
   return (
     <html lang="en">
@@ -36,7 +29,7 @@ export default function RootLayout({
             <QueryClientProvider client={queryClient}>
               <ReactQueryDevtools initialIsOpen={false} />
 
-              {loading ? <Loader /> : children}
+              {children}
               <Toaster />
             </QueryClientProvider>
           </div>

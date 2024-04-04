@@ -3,6 +3,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/redux/userSlice";
+import { useMutation } from "@tanstack/react-query";
+import { loginUser, logoutUser } from "@/services/users.services";
+import { queryClient } from "@/app/layout";
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -10,6 +13,23 @@ const DropdownUser = () => {
 
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
+
+  const {
+    mutate,
+    isError,
+    isSuccess,
+    isPending,
+    error,
+
+    data: dataLogOut,
+  } = useMutation({
+    mutationFn: logoutUser<any>,
+    mutationKey: ["logoutUser"],
+  });
+
+  function logoutHandler() {
+    mutate();
+  }
 
   // close on click outside
   useEffect(() => {
@@ -36,6 +56,14 @@ const DropdownUser = () => {
     document.addEventListener("keydown", keyHandler);
     return () => document.removeEventListener("keydown", keyHandler);
   });
+
+  console.log("dataLogOut : ", dataLogOut);
+
+  useEffect(() => {
+    if (isSuccess || isError) {
+      queryClient.invalidateQueries({ queryKey: ["userStatus"] });
+    }
+  }, [isError, isSuccess]);
 
   return (
     <div className="relative">
@@ -164,7 +192,10 @@ const DropdownUser = () => {
             </Link>
           </li>
         </ul>
-        <button className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base">
+        <button
+          onClick={logoutHandler}
+          className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+        >
           <svg
             className="fill-current"
             width="22"
