@@ -49,8 +49,8 @@ export async function getUserStatus<T>() {
   });
 }
 
-export async function getAllUser<T>() {
-  return makeSucureRequest<T>(URLS.USERS.INDEX, {
+export async function getAllLanloard<T>() {
+  return makeRequest<T>(URLS.lanloard.index, {
     method: "GET",
   });
 }

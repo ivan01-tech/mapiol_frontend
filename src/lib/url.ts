@@ -7,6 +7,9 @@ export const URLS = {
     CREATE_LOGIN: "/users/createAndLogin",
     GET_STATUS: "/users/check-auth",
   },
+  lanloard: {
+    index: "/utilisateurs/",
+  },
   AUTH: {
     LOGIN: "/auth/login",
     GET_STATUS: "/users/check-auth",

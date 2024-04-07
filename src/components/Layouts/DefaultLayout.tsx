@@ -20,70 +20,50 @@ export default function DefaultLayout({
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const pathname = usePathname();
-  const router = useRouter();
+  // const router = useRouter();
 
-  const {
-    isError,
-    isSuccess,
-    isLoadingError,
-    isPending,
-    isFetching,
-    isPaused,
-    error,
-    isLoading,
-    data: dataSingUp,
-  } = useQuery({
-    queryFn: getUserStatus<UserType>,
-    queryKey: ["userStatus"],
-  });
+  // const {
+  //   isError,
+  //   isSuccess,
+  //   isLoadingError,
+  //   isPending,
+  //   isFetching,
+  //   isPaused,
+  //   error,
+  //   isLoading,
+  //   data: dataSingUp,
+  // } = useQuery({
+  //   queryFn: getUserStatus<UserType>,
+  //   queryKey: ["userStatus"],
+  // });
 
   // console.log("path : ", pathname);
   const areNotrotected = pathname.split("/").includes("auth");
-  // // TODO create a route for sign up and login
-  // console.log("is protected : ", areNotrotected);
 
-  // TODO create a route for sign up and login
-  useEffect(
-    function () {
-      if (isSuccess) {
-        console.log("Main layout data : ", isSuccess, dataSingUp);
+  // useEffect(
+  //   function () {
+  //     if (isError) {
+  //       // toast.error(
+  //       //   error?.message || "You nedd to be logged in to access this route",
+  //       //   );
+  //       //   router.push("/auth/signin");
 
-        if (dataSingUp.roles == UserRoles.is_admin) {
-          dispatch(addUserInfo(dataSingUp));
-        } else {
-          toast.error("this page requires the user to be an administrator");
-          return router.push("/auth/signin");
-        }
-      }
-    },
-    [isSuccess, dataSingUp, router, dispatch],
-  );
-
-  useEffect(
-    function () {
-      if (isError) {
-        // toast.error(
-        //   error?.message || "You nedd to be logged in to access this route",
-        //   );
-        //   router.push("/auth/signin");
-
-        if (!areNotrotected) {
-          dispatch(clearUser());
-          console.log("error : ", error);
-          toast.error(
-            (error as Error).message ||
-              "You need to be connected to access this route",
-          );
-          router.push("/auth/signin");
-        }
-      }
-    },
-    [dispatch, isError, error?.message, error, router, areNotrotected],
-  );
-  // const pathname = usePathname();
+  //       if (!areNotrotected) {
+  //         dispatch(clearUser());
+  //         console.log("error : ", error);
+  //         toast.error(
+  //           (error as Error).message ||
+  //             "You need to be connected to access this route",
+  //         );
+  //         router.push("/auth/signin");
+  //       }
+  //     }
+  //   },
+  //   [dispatch, isError, error?.message, error, router, areNotrotected],
+  // );
 
   // useLayoutEffect(() => {
   //   (async () => {
@@ -111,9 +91,9 @@ export default function DefaultLayout({
   //   })();
   // }, [areNotrotected, dispatch, router]);
 
-  if (isPending || isLoading || isFetching || isLoadingError || isPaused) {
-    return <Loader />;
-  }
+  // if (isPending || isLoading || isFetching || isLoadingError || isPaused) {
+  //   return <Loader />;
+  // }
 
   return (
     <>

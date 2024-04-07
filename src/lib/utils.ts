@@ -5,19 +5,14 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const userRoles = {
-  is_admin: "ADMIN",
-  is_user: "USER",
-};
-
-export const USER_ROLES = ["ADMIN", "USER"];
-export const SALT_HASH = 10;
-export enum UserRoles {
-  is_admin = "ADMIN",
-  is_user = "USER",
+export function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("fr-FR", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  });
 }
-
-export const PHONE_NUMBER_REGEX = /(\+237|237)\s(6|2)(2|3|[5-9])[0-9]{7}/;
-export const EMAIL_REGEX = /\S+@\S+\.\S+/;
-export const PASSWORD_REGEX =
-  /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
