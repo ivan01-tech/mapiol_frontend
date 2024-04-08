@@ -2,32 +2,25 @@
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import CardDataStats from "@/components/CardDataStats";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-import Loading from "@/components/Loading";
 import TableTwo from "@/components/Tables/TableTwo";
-import Loader from "@/components/common/Loader";
-import NoDataComp from "@/components/ui/Nodata";
-import { getAllUser } from "@/services/users.services";
-import { UserType } from "@/types/users";
-import { useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
 
 const UserPagePage = () => {
-  const {
-    isError,
-    isSuccess,
-    isLoadingError,
-    isPending,
-    isFetching,
-    isPaused,
-    error,
-    isLoading,
-    data: usersData,
-  } = useQuery({
-    queryFn: getAllUser<UserType[]>,
-    queryKey: ["getAllUser"],
-  });
+  // const {
+  //   isError,
+  //   isSuccess,
+  //   isLoadingError,
+  //   isPending,
+  //   isFetching,
+  //   isPaused,
+  //   error,
+  //   isLoading,
+  //   data: usersData,
+  // } = useQuery({
+  //   queryFn: getAllUser<UserType[]>,
+  //   queryKey: ["getAllUser"],
+  // });
 
-  console.log("userdata", usersData);
+  // console.log("userdata", usersData);
 
   return (
     <DefaultLayout>
@@ -55,15 +48,15 @@ const UserPagePage = () => {
         </CardDataStats>
       </div>
       <div className="my-4">
-        {isLoading || isPending ? (
+        {/* {isLoading || isPending ? (
           <Loading />
         ) : isError ? (
           <p>{error.message}</p>
         ) : usersData.length == 0 ? (
           <NoDataComp objectType="Users" />
-        ) : (
-          <TableTwo />
-        )}
+        ) : ( */}
+        <TableTwo />
+        {/* )} */}
       </div>
     </DefaultLayout>
   );

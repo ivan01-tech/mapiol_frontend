@@ -41,11 +41,6 @@ const UserPagePage = () => {
     <DefaultLayout>
       <div className="flex justify-between">
         <Breadcrumb pageName="Proprietaires" />
-
-        <button className="flex items-center justify-center gap-3 rounded-md border border-primary px-4 py-2 text-center font-medium text-primary hover:bg-opacity-90 lg:px-8 xl:px-10">
-          <span>Ajouter</span>
-          <MdAdd></MdAdd>
-        </button>
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">

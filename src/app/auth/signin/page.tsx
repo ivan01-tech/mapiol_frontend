@@ -11,7 +11,7 @@ import { UserType } from "@/types/users";
 import { useMutation } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
-import { registerUser } from "@/app/services/users.service";
+import { registerUser } from "@/services/services/users.service";
 import { UserLogin, UserLoginType } from "@/models/UserLoginType";
 import { addUserInfo, clearUser } from "@/redux/userSlice";
 import { loginUser } from "@/services/users.services";

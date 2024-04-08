@@ -28,3 +28,17 @@ export type Lanloard = {
   created_at: string;
   updated_at: string;
 };
+
+type U = {
+  email:string;
+  nom:string;
+  telephone:string;
+  addresse:string;
+  slug:string;
+  login:string;
+  sexe:string;
+  statut:string;
+  password:string;
+  updated_at:string;
+  created_at:string;
+};

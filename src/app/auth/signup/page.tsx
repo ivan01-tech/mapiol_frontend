@@ -12,7 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { UserSignUp, UserSignUpType } from "@/models/UserSignUp";
 import PhoneInputWithCountrySelect from "react-phone-number-input";
 import { PhoneInput } from "react-international-phone";
-import { registerUser } from "@/app/services/users.service";
+import { registerUser } from "@/services/services/users.service";
 import { UserType } from "@/types/users";
 import { useDispatch } from "react-redux";
 import { addUserInfo } from "@/redux/userSlice";
