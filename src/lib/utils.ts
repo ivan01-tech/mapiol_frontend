@@ -16,3 +16,6 @@ export function formatDate(dateString: string): string {
     second: "2-digit",
   });
 }
+
+
+export const USER_TOKEN_STORAGE = 'mapiol_token'

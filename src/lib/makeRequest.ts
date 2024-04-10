@@ -1,8 +1,11 @@
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { axiosAuth, axiosNoAuth } from "./axios";
+import { ls } from "@/app/layout";
+import { USER_TOKEN_STORAGE } from "./utils";
 
 export interface RequestRetturn<W> {
   statusCode: number;
+  token?: number;
   message?: string;
   data: W;
 }
@@ -55,8 +58,11 @@ export async function makeRequest<T = any>(
         return Promise.reject({ message: res.data.message });
       }
 
+      if (res.data.token) {
+        ls.set(USER_TOKEN_STORAGE, res.data.token);
+      }
+
       const data = res.data.data;
-      console.log("data : ", data);
       return data;
     })
     .catch((err: AxiosError) => {

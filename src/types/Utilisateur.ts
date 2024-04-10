@@ -1,3 +1,12 @@
+export type BaseUser = {
+  id: number;
+  email: string;
+  nom: string;
+  password: string;
+  type_user:string
+  statut: string;
+};
+
 export type CardItemProps = {
   imageSrc?: string;
   name?: string;
@@ -29,6 +38,23 @@ export type Lanloard = {
   updated_at: string;
 };
 
+export type LanloardCreate = {
+  id: number;
+  email: string;
+  addresse: string;
+  login: string;
+  nom: string;
+  password: string;
+  sexe: string;
+  telephone: string;
+  type_user: string;
+  statut: string;
+  slug: string;
+  deleted_at: null;
+  created_at: string;
+  updated_at: string;
+};
+
 type U = {
   email:string;
   nom:string;
@@ -42,3 +68,4 @@ type U = {
   updated_at:string;
   created_at:string;
 };
+

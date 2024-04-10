@@ -47,6 +47,23 @@ import {
 } from "@tanstack/react-table";
 import { formatDate } from "@/lib/utils";
 import CreateLanLoard from "../Form/CreateLanLoard";
+import { deleteLanLord } from "@/services/landlord.services";
+import toast from "react-hot-toast";
+import { queryClient } from "@/app/layout";
+
+const handlerDeleteUser = async (user: number) => {
+  deleteLanLord<any>(user)
+    .then((res) => {
+      console.log("user deleted : ", res);
+      toast.success("User deleted !");
+      queryClient.invalidateQueries({
+        queryKey: ["getAllUser"],
+      });
+    })
+    .catch((err) => {
+      toast.error(err.message || "Something went wrong !");
+    });
+};
 
 export const columns: ColumnDef<{
   type_user: string;
@@ -248,7 +265,11 @@ export const columns: ColumnDef<{
             <DropdownMenuSeparator />
             <DropdownMenuItem>Activate</DropdownMenuItem>
             <DropdownMenuItem>Update</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => handlerDeleteUser(Number(InformationCreation.id))}
+            >
+              Delete
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -406,7 +427,7 @@ export function LanloardDataTable({ data: dataTable }: Props) {
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="text-muted-foreground flex-1 text-sm">
+        <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
           {table.getFilteredRowModel().rows.length} row(s) selected.
         </div>

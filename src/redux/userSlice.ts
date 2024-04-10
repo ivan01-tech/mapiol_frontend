@@ -1,11 +1,10 @@
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "./rootReducer";
-import { UserType } from "@/types/users";
-import { getUserStatus } from "@/services/users.services";
+import { BaseUser } from "@/types/Utilisateur";
 
 // Créez une interface pour le state du slice
 interface UserSliceState {
-  user: UserType | null;
+  user: BaseUser | null;
   loading: boolean;
   error: string | null;
 }
@@ -31,7 +30,7 @@ export const userSlice = createSlice({
     },
 
     // Ajoutez d'autres reducers si nécessaire
-    addUserInfo: (state, { payload }) => {
+    addUserInfo: (state, { payload }: { payload: BaseUser }) => {
       console.log("data : ", payload);
       state.user = payload;
       state.loading = false;

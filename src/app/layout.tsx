@@ -6,19 +6,31 @@ import "flatpickr/dist/flatpickr.min.css";
 import "@/css/satoshi.css";
 import "@/css/style.css";
 import React, { useEffect, useState } from "react";
-import Loader from "@/components/common/Loader";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Provider } from "react-redux";
 import { store } from "@/redux/store";
 import { Toaster } from "react-hot-toast";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import SecureLS from "secure-ls";
+
 export const queryClient = new QueryClient();
+
+const SECURE_LS_KEY = process.env.SECURE_LS_KEY;
+
+export let ls: SecureLS;
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  useEffect(() => {
+    ls = new SecureLS({
+      encodingType: "aes",
+      encryptionSecret: SECURE_LS_KEY,
+    });
+  }, []);
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (

@@ -116,7 +116,7 @@ const SignIn: React.FC = () => {
                     </span>
                   </div>
                   {errors.email && (
-                    <p className="text-[.7rem] text-red">
+                    <p className="text-red text-[.7rem]">
                       {errors.email.message}
                     </p>
                   )}
@@ -162,7 +162,7 @@ const SignIn: React.FC = () => {
                     </span>
                   </div>
                   {errors.password && (
-                    <p className="text-[.7rem] text-red">
+                    <p className="text-red text-[.7rem]">
                       {errors.password.message}
                     </p>
                   )}
@@ -181,10 +181,13 @@ const SignIn: React.FC = () => {
                 </div>
 
                 <div className="mt-6 text-center">
-                  <p>
-                    Don’t have any account?{" "}
-                    <Link href="/auth/admin/register" className="text-primary">
-                      Sign Up
+                  <p className="text-gray-700 mt-2 text-center text-xs">
+                    {"  Vous n'avez pas encore de compte ? "}
+                    <Link
+                      href={"/sign-up"}
+                      className=" text-primary hover:underline"
+                    >
+                      Créez-en un ici.
                     </Link>
                   </p>
                 </div>

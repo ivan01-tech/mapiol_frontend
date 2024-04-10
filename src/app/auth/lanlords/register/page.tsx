@@ -1,68 +1,85 @@
 "use client";
 import CreateLanLoard from "@/components/Form/CreateLanLoard";
 import { LanlordInput } from "@/models/CreateLanlordModel";
-import { createLanloard } from "@/services/landlord.services";
+import { addUserInfo, selectUser } from "@/redux/userSlice";
+import {
+  createLanloard,
+  createLanloardAnLOgin,
+} from "@/services/landlord.services";
+import { LanloardCreate } from "@/types/Utilisateur";
 import { useMutation } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
 
 type Props = {};
 
 function Page({}: Props) {
+  const dispatch = useDispatch();
   const {
     isError,
     isSuccess,
     isPending,
-    isPaused,
     error,
     mutateAsync,
     data: usersData,
   } = useMutation({
-    mutationFn: createLanloard<any>,
+    mutationFn: createLanloardAnLOgin<LanloardCreate>,
     mutationKey: ["createLanloard"],
   });
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LanlordInput>();
-
+  const router = useRouter();
   const onSubmit = (data: LanlordInput) => {
     console.log(data);
     try {
       mutateAsync(data)
         .then((resp) => {
           console.log("response: ", resp);
+          dispatch(
+            addUserInfo({
+              ...data,
+              id: resp.id,
+              statut: resp.statut,
+              type_user: resp.type_user,
+            }),
+          );
+          toast.success("Success!");
+          return router.replace("/lanlords/" + resp.id);
         })
         .catch((err) => {
+          toast.error(err.message || error?.message);
           console.log("response: ", err);
         });
     } catch (e) {}
   };
 
   return (
-    <div
-      style={{
-        // backgroundColor: "#E1EAEA",
-      }}
-      className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark"
-    >
-      <div className="my-10 justify-center max-w-[800px] rounded mx-auto py-4 flex flex-col items-center border border-slate-300">
-          <div className="w-1/2 flex-col justify-between">
-            <Image
-              src={"/images/logo/mapiol_logo.jpeg"}
-              width={100}
-              height={100}
-              className=" rounded-full  border border-slate-500 mx-auto object-cover"
-              alt="image"
-            />
-          </div>
+    <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+      <div className="mx-auto my-10 flex max-w-[800px] flex-col items-center justify-center rounded border border-slate-300 py-4">
+        <div className="w-1/2 flex-col justify-between">
+          <Image
+            src={"/images/logo/mapiol_logo.jpeg"}
+            width={100}
+            height={100}
+            className=" mx-auto  rounded-full border border-slate-500 object-cover"
+            alt="image"
+          />
+        </div>
         <form
           className="mx-auto w-full max-w-[700px] flex-1"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <div className="space-y-1 my-8">
+          <div className="my-8 space-y-1">
             <div className="text-center text-2xl font-bold">
               Créer votre compte Propriétaire
             </div>
@@ -178,7 +195,7 @@ function Page({}: Props) {
                 )}
               </div>
 
-              <div className="mb-6">
+              {/* <div className="mb-6">
                 <label className="mb-2.5 block font-medium text-black dark:text-white">
                   Login
                 </label>
@@ -197,7 +214,7 @@ function Page({}: Props) {
                     {errors.login.message}
                   </p>
                 )}
-              </div>
+              </div> */}
 
               <div className="mb-6">
                 <label className="mb-2.5 block font-medium text-black dark:text-white">
@@ -219,9 +236,26 @@ function Page({}: Props) {
               </div>
             </div>
 
-            <button className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
-              Créer
+            <button
+              disabled={isPending}
+              className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90"
+            >
+              {isPending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Patientez...
+                </>
+              ) : (
+                "Créer"
+              )}
             </button>
+
+            <p className="text-gray-700 mt-2 text-center text-xs">
+              {"  Vous avez déjà encore un compte ? "}
+              <Link href={"/sign-up"} className=" text-primary hover:underline">
+                Connecter vous.
+              </Link>
+            </p>
           </div>
         </form>
       </div>

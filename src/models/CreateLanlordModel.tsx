@@ -8,7 +8,6 @@ export const LanlordSchema = z.object({
   telephone: z.string(),
   addresse: z.string(),
   sexe: z.string().regex(/^M|F$/, { message: "Le sexe doit être M ou F" }),
-  login: z.string(),
   slug: z.string(),
 });
 export type LanlordInput = z.infer<typeof LanlordSchema>;
