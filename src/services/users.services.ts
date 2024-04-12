@@ -22,6 +22,13 @@ export async function loginUser<T>(data: Object) {
   });
 }
 
+export async function loginLanLord<T>(data: Object) {
+  return makeRequest<T>(URLS.lanloard.login, {
+    data,
+    method: "POST",
+  });
+}
+
 export async function registerUser<T>(data: Object) {
   return makeRequest<T>(URLS.USERS.REGISTER, {
     data,
@@ -51,6 +58,13 @@ export async function getUserStatus<T>() {
 
 export async function getAllLanloard<T>() {
   return makeRequest<T>(URLS.lanloard.index, {
+    method: "GET",
+  });
+}
+
+
+export async function getAllTenanat<T>() {
+  return makeRequest<T>(URLS.tenant.index, {
     method: "GET",
   });
 }

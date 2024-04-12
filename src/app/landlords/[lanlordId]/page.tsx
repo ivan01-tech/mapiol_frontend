@@ -1,10 +1,8 @@
 "use client";
 
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import ECommerce from "@/components/Dashboard/E-commerce";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Loading from "@/components/Loading";
-import { LanloardDataTable } from "@/components/Tables/LanloardTable2";
 import { TenantsLandLordTable } from "@/components/Tables/TenantsLandLordTable";
 import NoDataComp from "@/components/ui/Nodata";
 import { getAllLanloard } from "@/services/users.services";

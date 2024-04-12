@@ -6,9 +6,7 @@ import Link from "next/link";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import {
-  loginUser,
-} from "@/services/users.services";
+import { loginLanLord, loginUser } from "@/services/users.services";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { FaFacebookF } from "react-icons/fa";
@@ -21,31 +19,55 @@ import {
 } from "@/components/ui/card";
 import { ButtonLoading } from "@/components/ui/BuutonLoading";
 import { LoginModel, LoginModelType } from "@/models/LoginModel";
+import toast from "react-hot-toast";
+import { LanloardCreate } from "@/types/Utilisateur";
+import { useDispatch } from "react-redux";
+import { addUserInfo } from "@/redux/userSlice";
 
 export default function SignInAccount() {
   // state
   const router = useRouter();
 
   // Mutations
-  const { mutate, isError, isPending, data, error, isSuccess } = useMutation({
-    mutationFn: loginUser<any>,
-  });
+  const { mutateAsync, isError, isPending, data, error, isSuccess } =
+    useMutation({
+      mutationFn: loginLanLord<LanloardCreate>,
+    });
 
   const {
     register,
     handleSubmit,
-    trigger,
-    setValue,
     formState: { errors },
   } = useForm<LoginModelType>({
     resolver: zodResolver(LoginModel),
   });
-
+  const dispatch = useDispatch();
   const onSubmit: SubmitHandler<LoginModelType> = (user, e) => {
     console.log("first form  : ", user);
 
-    mutate(user);
+    mutateAsync(user)
+      .then((resp) => {
+        console.log("response: ", resp.slug);
+        dispatch(
+          addUserInfo({
+            email: resp.email,
+            id: resp.id,
+            nom: resp.nom,
+            password: resp.password,
+            slug: resp.slug,
+            statut: resp.statut,
+            type_user: resp.type_user,
+          }),
+        );
+        toast.success("Success!");
+        return router.replace("/lanlords/" + resp.slug);
+      })
+      .catch((err) => {
+        toast.error(err.message || error?.message);
+        console.log("response: ", err);
+      });
   };
+
   return (
     <>
       <div className="flex min-h-screen justify-center">
@@ -68,9 +90,7 @@ export default function SignInAccount() {
                   alt="Logo mapiol"
                 />
               </CardTitle>
-              <div className="my-3 text-2xl font-bold">
-                Ravi de vous revoir
-              </div>
+              <div className="my-3 text-2xl font-bold">Ravi de vous revoir</div>
             </CardHeader>
             <CardContent className="grid gap-4">
               <div className="grid gap-2">
@@ -83,7 +103,7 @@ export default function SignInAccount() {
                     required: "Address is required",
                   })}
                   placeholder="Enter your address"
-                  className="w-full rounded-lg border  bg-transparent py-4 pl-6 pr-10 text-black outline-none border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:border-primary"
+                  className="w-full rounded-lg border  border-primary bg-transparent py-4 pl-6 pr-10 text-black outline-none focus-visible:shadow-none dark:border-form-strokedark dark:border-primary dark:bg-form-input dark:text-white"
                 />
                 {errors.email && (
                   <p className="text-[.7rem] text-red-500">
@@ -98,12 +118,12 @@ export default function SignInAccount() {
                   <span className="text-[.7rem] text-red-500">*</span>
                 </label>
                 <input
-                  type="text"
+                  type="password"
                   {...register("password", {
                     required: "Address is required",
                   })}
                   placeholder="Enter your address"
-                  className="w-full rounded-lg border  bg-transparent py-4 pl-6 pr-10 text-black outline-none border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:border-primary"
+                  className="w-full rounded-lg border  border-primary bg-transparent py-4 pl-6 pr-10 text-black outline-none focus-visible:shadow-none dark:border-form-strokedark dark:border-primary dark:bg-form-input dark:text-white"
                 />
                 {errors.password && (
                   <p className="text-[.7rem] text-red-500">

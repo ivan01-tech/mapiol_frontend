@@ -44,7 +44,7 @@ function Page({}: Props) {
     try {
       mutateAsync(data)
         .then((resp) => {
-          console.log("response: ", resp);
+          console.log("response: ", resp.slug);
           dispatch(
             addUserInfo({
               ...data,
@@ -54,7 +54,7 @@ function Page({}: Props) {
             }),
           );
           toast.success("Success!");
-          return router.replace("/lanlords/" + resp.id);
+          return router.replace("/lanlords/" + resp.slug);
         })
         .catch((err) => {
           toast.error(err.message || error?.message);

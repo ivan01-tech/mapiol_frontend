@@ -9,9 +9,18 @@ export const URLS = {
   },
   lanloard: {
     index: "/utilisateurs/",
-    CREATE_LOGIN:
-      "/utilisateurs/create_and_login/",
+    login: "/utilisateurs/login/",
+    create: "/utilisateurs/create/",
+    CREATE_LOGIN: "/utilisateurs/create_and_login/",
     delete: (id: number) => "/utilisateurs/delete/" + id + "/",
+  },
+
+  tenant: {
+    index: "/locataire/",
+    login: "/locataire/login/",
+    create: "/locataire/create/",
+    CREATE_LOGIN: "/locataire/create_and_login/",
+    delete: (id: number) => "/locataire/delete/" + id + "/",
   },
   AUTH: {
     LOGIN: "/auth/login",

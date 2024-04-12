@@ -298,7 +298,7 @@ type Props = {
   }[];
 };
 
-export function LanloardDataTable({ data: dataTable }: Props) {
+export function TenantsDataTable({ data: dataTable }: Props) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -337,7 +337,7 @@ export function LanloardDataTable({ data: dataTable }: Props) {
         {/* <Dialog> */}
         {/* <DialogTrigger asChild> */}
         <Button>
-          <Link href={"/users/landlords/create"}>Ajouter</Link>
+          <Link href={"/users/tenants/create"}>Ajouter</Link>
         </Button>
         {/* </DialogTrigger>
           <DialogContent className="h-screen w-screen overflow-auto">

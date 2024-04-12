@@ -2,8 +2,9 @@ export type BaseUser = {
   id: number;
   email: string;
   nom: string;
+  slug: string;
   password: string;
-  type_user:string
+  type_user: string;
   statut: string;
 };
 

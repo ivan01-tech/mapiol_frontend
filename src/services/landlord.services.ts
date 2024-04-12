@@ -2,14 +2,21 @@ import { makeRequest, makeSucureRequest } from "@/lib/makeRequest";
 import { URLS } from "@/lib/url";
 
 export async function createLanloard<T = any>(data: Object) {
-  return makeRequest<T>(URLS.USERS.CREATE_LOGIN, {
+  return makeRequest<T>(URLS.lanloard.create, {
+    data,
+    method: "POST",
+  });
+}
+
+export async function createtenants<T = any>(data: Object) {
+  return makeRequest<T>(URLS.tenant.create, {
     data,
     method: "POST",
   });
 }
 
 export async function createLanloardAnLOgin<T = any>(data: Object) {
-  const resp = await makeRequest<T>(URLS.lanloard.CREATE_LOGIN, {
+  const resp = await makeRequest<T>(URLS.lanloard.create, {
     data,
     method: "POST",
   });
