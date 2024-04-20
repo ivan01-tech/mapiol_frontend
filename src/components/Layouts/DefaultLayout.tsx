@@ -1,17 +1,8 @@
 "use client";
-import { UserType } from "@/types/users";
-import { useEffect, useLayoutEffect } from "react";
-import toast from "react-hot-toast";
 import { usePathname, useRouter } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
-import { addUserInfo, clearUser, selectUser } from "@/redux/userSlice";
 import React, { useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
-import { getUserStatus } from "@/services/users.services";
-import { UserRoles } from "@/lib/utils";
-import Loader from "../common/Loader";
-import { useQuery } from "@tanstack/react-query";
 
 export default function DefaultLayout({
   children,

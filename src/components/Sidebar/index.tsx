@@ -67,15 +67,16 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     >
       {/* <!-- SIDEBAR HEADER --> */}
       <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
-        <Link href="/">
+        <div className="flex h-[100px] w-full justify-center overflow-hidden text-center">
           <Image
-            width={176}
-            height={32}
-            src={"/images/logo/logo.svg"}
+            width={109}
+            className="object-fill"
+            height={102}
+            src={"/images/logo/mapiol_logo.jpeg"}
             alt="Logo"
-            priority
+            // priority
           />
-        </Link>
+        </div>
 
         <button
           ref={trigger}
@@ -262,8 +263,20 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   Locataires
                 </Link>
               </li>
-              {/* <!-- Menu Item USERS --> */}
 
+              {/* <!-- Menu Item USERS --> */}
+              <li>
+                <Link
+                  href="/realestates"
+                  className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                    pathname.includes("calendar") &&
+                    "bg-graydark dark:bg-meta-4"
+                  }`}
+                >
+            
+                  Immobilier
+                </Link>
+              </li>
               {/* <!-- Menu Item Calendar --> */}
               <li>
                 <Link
