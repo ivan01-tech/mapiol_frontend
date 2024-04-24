@@ -4,10 +4,10 @@ import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { clearUser, selectUser } from "@/redux/userSlice";
 import { useMutation } from "@tanstack/react-query";
-import { loginUser, logoutUser } from "@/services/users.services";
+import {  logoutUser } from "@/services/users.services";
 import { ls, queryClient } from "@/app/layout";
 
-const DropdownUser = () => {
+const DropDownMenuLogin = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const user = useSelector(selectUser);
 const dispatch = useDispatch()
@@ -18,9 +18,6 @@ const dispatch = useDispatch()
     mutate,
     isError,
     isSuccess,
-    isPending,
-    error,
-
     data: dataLogOut,
   } = useMutation({
     mutationFn: logoutUser<any>,
@@ -224,4 +221,4 @@ const dispatch = useDispatch()
   );
 };
 
-export default DropdownUser;
+export default DropDownMenuLogin;

@@ -6,6 +6,7 @@ import DropdownUser from "./DropdownUser";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/redux/userSlice";
+import Buttons from "@/app/ui/buttons/page";
 
 const Header = (props: {
   sidebarOpen: string | boolean | undefined;
@@ -115,10 +116,18 @@ const Header = (props: {
               </>
             )}
           </ul>
-
-          {/* <!-- User Area --> */}
-          <DropdownUser />
-          {/* <!-- User Area --> */}
+          <>
+            {user ? (
+              <DropdownUser />
+            ) : (
+              <Link
+                href="/"
+                className="inline-flex items-center justify-center rounded-md bg-primary px-3 py-2 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
+              >
+                Login
+              </Link>
+            )}
+          </>
         </div>
       </div>
     </header>
