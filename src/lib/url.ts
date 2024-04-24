@@ -5,14 +5,28 @@ export const URLS = {
     REGISTER: "/users/register",
     LOGIN: "/users/login",
     CREATE_LOGIN: "/users/createAndLogin",
-    GET_STATUS: "/users/check-auth",
+    GET_STATUS: "/user/checkAuth",
+  },
+  COUNTRY: {
+    index: "/pays/",
+  },
+  TOWN: {
+    index: "/ville/",
+  },
+  TYPE_ESTATE: {
+    index: "/typeBien/",
   },
   lanloard: {
     index: "/utilisateurs/",
+    GET_STATUS: "/utilisateur/CheckAuth",
     login: "/utilisateurs/login/",
     create: "/utilisateurs/create/",
     CREATE_LOGIN: "/utilisateurs/create_and_login/",
     delete: (id: number) => "/utilisateurs/delete/" + id + "/",
+  },
+  REAL_ESTATE: {
+    index: "",
+    create: "/proprieter/create/",
   },
 
   tenant: {

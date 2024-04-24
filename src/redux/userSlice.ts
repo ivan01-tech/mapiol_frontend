@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "./rootReducer";
 import { BaseUser } from "@/types/Utilisateur";
+import { UserType } from "@/types/users";
 
 // Créez une interface pour le state du slice
 interface UserSliceState {
-  user: BaseUser | null;
+  user: UserType | null;
   loading: boolean;
   error: string | null;
 }
@@ -30,7 +31,7 @@ export const userSlice = createSlice({
     },
 
     // Ajoutez d'autres reducers si nécessaire
-    addUserInfo: (state, { payload }: { payload: BaseUser }) => {
+    addUserInfo: (state, { payload }: { payload: UserType }) => {
       console.log("data : ", payload);
       state.user = payload;
       state.loading = false;

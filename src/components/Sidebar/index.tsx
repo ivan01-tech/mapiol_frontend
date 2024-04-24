@@ -5,6 +5,8 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import SidebarLinkGroup from "./SidebarLinkGroup";
+import { useSelector } from "react-redux";
+import { selectUser } from "@/redux/userSlice";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -12,6 +14,7 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
+  const {user} = useSelector(selectUser);
   const pathname = usePathname();
 
   const trigger = useRef<any>(null);

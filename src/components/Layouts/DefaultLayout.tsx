@@ -1,8 +1,13 @@
 "use client";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
+import { useQuery } from "@tanstack/react-query";
+import { getUserStatus } from "@/services/users.services";
+import { UserType } from "@/types/users";
+import { useDispatch } from "react-redux";
+import { addUserInfo, clearUser } from "@/redux/userSlice";
 
 export default function DefaultLayout({
   children,
@@ -11,25 +16,25 @@ export default function DefaultLayout({
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const pathname = usePathname();
   // const router = useRouter();
 
-  // const {
-  //   isError,
-  //   isSuccess,
-  //   isLoadingError,
-  //   isPending,
-  //   isFetching,
-  //   isPaused,
-  //   error,
-  //   isLoading,
-  //   data: dataSingUp,
-  // } = useQuery({
-  //   queryFn: getUserStatus<UserType>,
-  //   queryKey: ["userStatus"],
-  // });
+  const {
+    isError,
+    isSuccess,
+    isLoadingError,
+    isPending,
+    isFetching,
+    isPaused,
+    error,
+    isLoading,
+    data: dataSingUp,
+  } = useQuery({
+    queryFn: getUserStatus<UserType>,
+    queryKey: ["userStatus"],
+  });
 
   // console.log("path : ", pathname);
   const areNotrotected = pathname.split("/").includes("auth");
@@ -85,6 +90,22 @@ export default function DefaultLayout({
   // if (isPending || isLoading || isFetching || isLoadingError || isPaused) {
   //   return <Loader />;
   // }
+
+  useEffect(
+    function () {
+      if (isSuccess) {
+        dispatch(addUserInfo(dataSingUp));
+        return;
+      }
+
+      if (isError) {
+        dispatch(clearUser());
+        return;
+      }
+    },
+    [dataSingUp, dispatch, isError, isSuccess],
+  );
+  console.log("data : ", dataSingUp);
 
   return (
     <>

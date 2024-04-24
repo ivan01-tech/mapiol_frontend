@@ -38,7 +38,15 @@ export type Lanloard = {
   created_at: string;
   updated_at: string;
 };
+export type Town  = {
+  nom:string;
+  id:string;
+}
 
+export type EstateType = {
+  id: number;
+  libelle: string;
+};
 export type LanloardCreate = {
   id: number;
   email: string;

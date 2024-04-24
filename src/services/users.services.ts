@@ -1,5 +1,7 @@
+import { ls } from "@/app/layout";
 import { makeRequest, makeSucureRequest } from "@/lib/makeRequest";
 import { URLS } from "@/lib/url";
+import { USER_TOKEN_STORAGE } from "@/lib/utils";
 
 export async function createUser(data: Object) {
   return makeSucureRequest(URLS.USERS.CREATE, {
@@ -36,7 +38,6 @@ export async function registerUser<T>(data: Object) {
   });
 }
 
-
 export async function loginAdminUser<T>(data: Object) {
   return makeRequest<T>(URLS.USERS.LOGIN, {
     data,
@@ -51,8 +52,15 @@ export async function logoutUser<T>() {
 }
 
 export async function getUserStatus<T>() {
-  return makeSucureRequest<T>(URLS.USERS.GET_STATUS, {
+  const token = ls.get(USER_TOKEN_STORAGE);
+
+  console.log("token: " + token);
+  
+  return makeRequest<T>(URLS.lanloard.GET_STATUS, {
     method: "GET",
+    headers: {
+      Authorization: "Bearer " + token,
+    },
   });
 }
 
@@ -61,7 +69,6 @@ export async function getAllLanloard<T>() {
     method: "GET",
   });
 }
-
 
 export async function getAllTenanat<T>() {
   return makeRequest<T>(URLS.tenant.index, {

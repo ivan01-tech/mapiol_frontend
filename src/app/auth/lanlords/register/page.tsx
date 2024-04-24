@@ -109,7 +109,7 @@ function Page({}: Props) {
                   />
                 </div>
                 {errors.email && (
-                  <p className="text-red text-[.7rem]">
+                  <p className="text-red-600 text-[.7rem]">
                     {errors.email.message}
                   </p>
                 )}
@@ -130,7 +130,7 @@ function Page({}: Props) {
                   />
                 </div>
                 {errors.password && (
-                  <p className="text-red text-[.7rem]">
+                  <p className="text-red-600 text-[.7rem]">
                     {errors.password.message}
                   </p>
                 )}
@@ -149,7 +149,7 @@ function Page({}: Props) {
                   />
                 </div>
                 {errors.nom && (
-                  <p className="text-red text-[.7rem]">{errors.nom.message}</p>
+                  <p className="text-red-600 text-[.7rem]">{errors.nom.message}</p>
                 )}
               </div>
 
@@ -168,7 +168,7 @@ function Page({}: Props) {
                   />
                 </div>
                 {errors.telephone && (
-                  <p className="text-red text-[.7rem]">
+                  <p className="text-red-600 text-[.7rem]">
                     {errors.telephone.message}
                   </p>
                 )}
@@ -189,7 +189,7 @@ function Page({}: Props) {
                   />
                 </div>
                 {errors.addresse && (
-                  <p className="text-red text-[.7rem]">
+                  <p className="text-red-600 text-[.7rem]">
                     {errors.addresse.message}
                   </p>
                 )}
@@ -210,7 +210,7 @@ function Page({}: Props) {
                   />
                 </div>
                 {errors.login && (
-                  <p className="text-red text-[.7rem]">
+                  <p className="text-red-600 text-[.7rem]">
                     {errors.login.message}
                   </p>
                 )}
@@ -231,7 +231,7 @@ function Page({}: Props) {
                   />
                 </div>
                 {errors.sexe && (
-                  <p className="text-red text-[.7rem]">{errors.sexe.message}</p>
+                  <p className="text-red-600 text-[.7rem]">{errors.sexe.message}</p>
                 )}
               </div>
             </div>

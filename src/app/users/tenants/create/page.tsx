@@ -93,7 +93,7 @@ export default function CreateLanLoard({}: Props) {
                     />
                   </div>
                   {errors.email && (
-                    <p className="text-red text-[.7rem]">
+                    <p className="text-red-600 text-[.7rem]">
                       {errors.email.message}
                     </p>
                   )}
@@ -114,7 +114,7 @@ export default function CreateLanLoard({}: Props) {
                     />
                   </div>
                   {errors.password && (
-                    <p className="text-red text-[.7rem]">
+                    <p className="text-red-600 text-[.7rem]">
                       {errors.password.message}
                     </p>
                   )}
@@ -133,7 +133,7 @@ export default function CreateLanLoard({}: Props) {
                     />
                   </div>
                   {errors.nom && (
-                    <p className="text-red text-[.7rem]">
+                    <p className="text-red-600 text-[.7rem]">
                       {errors.nom.message}
                     </p>
                   )}
@@ -154,7 +154,7 @@ export default function CreateLanLoard({}: Props) {
                     />
                   </div>
                   {errors.telephone && (
-                    <p className="text-red text-[.7rem]">
+                    <p className="text-red-600 text-[.7rem]">
                       {errors.telephone.message}
                     </p>
                   )}
@@ -175,7 +175,7 @@ export default function CreateLanLoard({}: Props) {
                     />
                   </div>
                   {errors.addresse && (
-                    <p className="text-red text-[.7rem]">
+                    <p className="text-red-600 text-[.7rem]">
                       {errors.addresse.message}
                     </p>
                   )}
@@ -196,7 +196,7 @@ export default function CreateLanLoard({}: Props) {
                     />
                   </div>
                   {errors.sexe && (
-                    <p className="text-red text-[.7rem]">
+                    <p className="text-red-600 text-[.7rem]">
                       {errors.sexe.message}
                     </p>
                   )}

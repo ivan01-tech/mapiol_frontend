@@ -8,6 +8,13 @@ export async function createLanloard<T = any>(data: Object) {
   });
 }
 
+export async function createRealestate<T = any>(data: Object) {
+  return makeRequest<T>(URLS.REAL_ESTATE.create, {
+    data,
+    method: "POST",
+  });
+}
+
 export async function createtenants<T = any>(data: Object) {
   return makeRequest<T>(URLS.tenant.create, {
     data,

@@ -2,19 +2,36 @@
 
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
-import { createLanloard } from "@/services/landlord.services";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { createLanloard, createRealestate } from "@/services/landlord.services";
 import { Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import { useRouter } from "next/navigation";
-import { RealEstateType } from "@/models/RealEstateModel";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Divider } from "@chakra-ui/react";
+import {
+  RealEstateType,
+  booleanKeys,
+  schemaRealEstate,
+} from "@/models/RealEstateModel";
+import { Checkbox, Divider } from "@chakra-ui/react";
+import { getAllTowns, getAllstatetType } from "@/services/generale.services";
+import { EstateType, Town } from "@/types/Utilisateur";
+import { useSelector } from "react-redux";
+import { selectUser } from "@/redux/userSlice";
 
 type Props = {};
 export default function CreateRealEstate({}: Props) {
+  const { user } = useSelector(selectUser);
+  const { data: towns } = useQuery({
+    queryFn: getAllTowns<Town[]>,
+    queryKey: ["getAllUser"],
+  });
+
+  const { data: typeEstate } = useQuery({
+    queryFn: getAllstatetType<EstateType[]>,
+    queryKey: ["getAllstatetType"],
+  });
   const {
     isError,
     isSuccess,
@@ -22,25 +39,34 @@ export default function CreateRealEstate({}: Props) {
     isPaused,
     error,
     mutateAsync,
-    data: usersData,
+    data: respData,
   } = useMutation({
-    mutationFn: createLanloard<any>,
-    mutationKey: ["createLanloard"],
+    mutationFn: createRealestate<any>,
+    mutationKey: ["createRealestate"],
   });
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<RealEstateType>();
-  const router = useRouter();
-
   const [formData, setFormData] = useState({
     nom: "",
-    surface: "",
+    surface: 0,
     uniteSurface: "m2", // Unité de mesure par défaut
     // Autres propriétés...
   });
+  const {
+    register,
+    setValue,
+    control,
+    trigger,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RealEstateType>({
+    defaultValues: {
+      ville_id: towns ? Number(towns[0].id) : 0,
+      typeBien_id: typeEstate ? Number(typeEstate[0].id) : 0,
+      exist_salle_manger: false,
+      proprietaire_id: user?.id,
+      surface: formData.surface,
+    },
+  });
+  const router = useRouter();
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -49,15 +75,18 @@ export default function CreateRealEstate({}: Props) {
     setFormData({ ...formData, [name]: value });
   };
 
-  // const handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   onSubmit(formData);
-  // };
-
   const onSubmit = (data: RealEstateType) => {
     console.log(data);
     try {
-      mutateAsync(data)
+      mutateAsync({
+        ...data,
+        // ville_id: !data.ville_id && towns && Number(towns[0].id),
+        // typeBien_id:
+        //   !data.typeBien_id && typeEstate && Number(typeEstate[1].id),
+        exist_salle_manger: false,
+        proprietaire_id: user?.id,
+        surface: formData.surface,
+      })
         .then((resp) => {
           console.log("response: ", resp.slug);
           toast.success("Success!");
@@ -69,6 +98,19 @@ export default function CreateRealEstate({}: Props) {
         });
     } catch (e) {}
   };
+  const setValueFormCheckBox = ({
+    key,
+    value,
+  }: {
+    key: keyof RealEstateType;
+    value: boolean;
+  }) => {
+    setValue(key, value);
+  };
+
+  const booleanKeysArry = Object.entries(schemaRealEstate.shape).filter(
+    ([prev]) => booleanKeys.includes(prev),
+  );
   return (
     <DefaultLayout>
       <div className="flex justify-between">
@@ -85,7 +127,7 @@ export default function CreateRealEstate({}: Props) {
           <form onSubmit={handleSubmit(onSubmit)}>
             {isError && (
               <div className="m-3 flex w-full p-4 text-center">
-                <p className="text-red-700">{error?.message}</p>
+                <p className="text-red-600-700">{error?.message}</p>
               </div>
             )}
 
@@ -106,16 +148,12 @@ export default function CreateRealEstate({}: Props) {
                         type="text"
                         {...register("nom", {
                           required: "nom is required",
-                          pattern: {
-                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                            message: "Invalid nom address",
-                          },
                         })}
                         className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                       />
                     </div>
                     {errors.nom && (
-                      <p className="text-red text-[.7rem]">
+                      <p className="text-[.7rem] text-red-600">
                         {errors.nom.message}
                       </p>
                     )}
@@ -135,7 +173,7 @@ export default function CreateRealEstate({}: Props) {
                       />
                     </div>
                     {errors.addresse && (
-                      <p className="text-red text-[.7rem]">
+                      <p className="text-[.7rem] text-red-600">
                         {errors.addresse.message}
                       </p>
                     )}
@@ -158,7 +196,7 @@ export default function CreateRealEstate({}: Props) {
                       />
                     </div>
                     {errors.nbrchambre && (
-                      <p className="text-red text-[.7rem]">
+                      <p className="text-[.7rem] text-red-600">
                         {errors.nbrchambre.message}
                       </p>
                     )}
@@ -177,7 +215,7 @@ export default function CreateRealEstate({}: Props) {
                       />
                     </div>
                     {errors.nbrescalier && (
-                      <p className="text-red text-[.7rem]">
+                      <p className="text-[.7rem] text-red-600">
                         {errors.nbrescalier.message}
                       </p>
                     )}
@@ -196,7 +234,7 @@ export default function CreateRealEstate({}: Props) {
                       />
                     </div>
                     {errors.nbrbatiment && (
-                      <p className="text-red text-[.7rem]">
+                      <p className="text-[.7rem] text-red-600">
                         {errors.nbrbatiment.message}
                       </p>
                     )}
@@ -216,7 +254,7 @@ export default function CreateRealEstate({}: Props) {
                       />
                     </div>
                     {errors.numeroporte && (
-                      <p className="text-red text-[.7rem]">
+                      <p className="text-[.7rem] text-red-600">
                         {errors.numeroporte.message}
                       </p>
                     )}
@@ -229,17 +267,26 @@ export default function CreateRealEstate({}: Props) {
                     <label className="mb-2.5 block font-medium text-black dark:text-white">
                       Ville
                     </label>
-                    <div className="relative flex-1">
-                      <select
-                        name="uniteSurface"
-                        className="w-full  border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                      >
-                        <option value="m2">Caemroun</option>
-                        <option value="ft2">ft²</option>
-                      </select>
-                    </div>
+                    {towns && (
+                      <div className="relative flex-1">
+                        <select
+                          // name="uniteSurface"
+                          onChange={(e) => {
+                            console.log(e.target.value);
+                            setValue("ville_id", Number(e.target.value));
+                          }}
+                          className="w-full  border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                        >
+                          {towns?.map((prev) => (
+                            <option key={prev.id} value={prev.id}>
+                              {prev.nom}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
                     {errors.ville_id && (
-                      <p className="text-red text-[.7rem]">
+                      <p className="text-[.7rem] text-red-600">
                         {errors.ville_id.message}
                       </p>
                     )}
@@ -250,19 +297,15 @@ export default function CreateRealEstate({}: Props) {
                     </label>
                     <div className="relative">
                       <input
-                        type="text"
+                        type="number"
                         {...register("code_postal", {
                           required: "code_postal is required",
-                          pattern: {
-                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                            message: "Invalid nom address",
-                          },
                         })}
                         className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                       />
                     </div>
                     {errors.code_postal && (
-                      <p className="text-red text-[.7rem]">
+                      <p className="text-[.7rem] text-red-600">
                         {errors.code_postal.message}
                       </p>
                     )}
@@ -282,9 +325,9 @@ export default function CreateRealEstate({}: Props) {
                         className=" rounded-lg rounded-br-none rounded-tr-none border border-r-0 border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                       />
                       <select
-                        name="uniteSurface"
                         className="w-1/2 rounded-lg rounded-bl-none rounded-tl-none border border-l-0 border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                         value={formData.uniteSurface}
+                        name="uniteSurface"
                         onChange={handleChange}
                       >
                         <option value="m2">m²</option>
@@ -292,7 +335,7 @@ export default function CreateRealEstate({}: Props) {
                       </select>
                     </div>
                     {errors.surface && (
-                      <p className="text-red text-[.7rem]">
+                      <p className="text-[.7rem] text-red-600">
                         {errors.surface.message}
                       </p>
                     )}
@@ -309,16 +352,12 @@ export default function CreateRealEstate({}: Props) {
                         type="text"
                         {...register("zoneStationnement", {
                           required: "zoneStationnement is required",
-                          pattern: {
-                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                            message: "Invalid zoneStationnement address",
-                          },
                         })}
                         className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                       />
                     </div>
                     {errors.zoneStationnement && (
-                      <p className="text-red text-[.7rem]">
+                      <p className="text-[.7rem] text-red-600">
                         {errors.zoneStationnement.message}
                       </p>
                     )}
@@ -338,7 +377,7 @@ export default function CreateRealEstate({}: Props) {
                       />
                     </div>
                     {errors.typemouvement && (
-                      <p className="text-red text-[.7rem]">
+                      <p className="text-[.7rem] text-red-600">
                         {errors.typemouvement.message}
                       </p>
                     )}
@@ -358,7 +397,7 @@ export default function CreateRealEstate({}: Props) {
                       />
                     </div>
                     {errors.nbr_salle_bain && (
-                      <p className="text-red text-[.7rem]">
+                      <p className="text-[.7rem] text-red-600">
                         {errors.nbr_salle_bain.message}
                       </p>
                     )}
@@ -373,24 +412,26 @@ export default function CreateRealEstate({}: Props) {
                       Type de bien
                     </label>
                     <div className="flex">
-                      <input
-                        id="typeBien_id"
-                        name="typeBien_id"
-                        type="number"
-                        className=" rounded-lg rounded-br-none rounded-tr-none border border-r-0 border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                      />
-                      <select
-                        name="typeBien_id"
-                        className="w-1/2 rounded-lg rounded-bl-none rounded-tl-none border border-l-0 border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                        value={formData.uniteSurface}
-                        onChange={handleChange}
-                      >
-                        <option value="m2">m²</option>
-                        <option value="ft2">ft²</option>
-                      </select>
+                      {typeEstate && (
+                        <div className="relative flex-1">
+                          <select
+                            name="uniteSurface"
+                            onChange={(e) => {
+                              setValue("typeBien_id", Number(e.target.value));
+                            }}
+                            className="w-full  border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                          >
+                            {typeEstate?.map((prev) => (
+                              <option key={prev.id} value={prev.id}>
+                                {prev.libelle}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      )}
                     </div>
                     {errors.typeBien_id && (
-                      <p className="text-red text-[.7rem]">
+                      <p className="text-[.7rem] text-red-600">
                         {errors.typeBien_id.message}
                       </p>
                     )}
@@ -410,7 +451,7 @@ export default function CreateRealEstate({}: Props) {
                       />
                     </div>
                     {errors.anneeconstruction && (
-                      <p className="text-red text-[.7rem]">
+                      <p className="text-[.7rem] text-red-600">
                         {errors.anneeconstruction.message}
                       </p>
                     )}
@@ -424,17 +465,14 @@ export default function CreateRealEstate({}: Props) {
                   <div className="flex flex-wrap gap-3  rounded  ">
                     <div className="mb-6 flex w-1/3 min-w-[150px] max-w-[250px] flex-row-reverse items-center gap-2 ">
                       <label className="block font-medium text-black dark:text-white">
-                        Salle à manger ?
-                      </label>
-                      <Checkbox {...register("exist_salle_manger")} />
-                    </div>
-
-                    <div className="mb-6 flex w-1/3 min-w-[150px] max-w-[250px] flex-row-reverse items-center gap-2 ">
-                      <label className="block font-medium text-black dark:text-white">
                         Garage ?
                       </label>
 
-                      <Checkbox {...register("ungarage")} />
+                      <Checkbox
+                        colorScheme="green"
+                        {...register("ungarage")}
+                        id="ungarage"
+                      />
                     </div>
 
                     <div className="mb-6 flex w-1/3 min-w-[150px] max-w-[250px] flex-row-reverse items-center gap-2 ">
@@ -442,7 +480,11 @@ export default function CreateRealEstate({}: Props) {
                         Cave ?
                       </label>
 
-                      <Checkbox {...register("unecave")} />
+                      <Checkbox
+                        colorScheme="green"
+                        {...register("unecave")}
+                        id="unecave"
+                      />
                     </div>
 
                     <div className="mb-6 flex w-1/3 min-w-[150px] max-w-[250px] flex-row-reverse items-center gap-2 ">
@@ -450,56 +492,77 @@ export default function CreateRealEstate({}: Props) {
                         Internet ?
                       </label>
 
-                      <Checkbox {...register("internet")} />
+                      <Checkbox
+                        colorScheme="green"
+                        {...register("internet")}
+                        id="internet"
+                      />
                     </div>
 
                     <div className="mb-6 flex w-1/3 min-w-[150px] max-w-[250px] flex-row-reverse items-center gap-2 ">
                       <label className="block font-medium text-black dark:text-white">
                         Téléviseur écran plat ?
                       </label>
-                      <Checkbox {...register("dep_tvecranplat")} />
-                    </div>
-
-                    <div className="mb-6 flex w-1/3 min-w-[150px] max-w-[250px] flex-row-reverse items-center gap-2 ">
-                      <label className="block font-medium text-black dark:text-white">
-                        Téléviseur écran plat ?
-                      </label>
-                      <Checkbox {...register("dep_tvecranplat")} />
+                      <Checkbox
+                        colorScheme="green"
+                        {...register("dep_tvecranplat")}
+                        id="dep_tvecranplat"
+                      />
                     </div>
 
                     <div className="mb-6 flex w-1/3 min-w-[150px] max-w-[250px] flex-row-reverse items-center gap-2 ">
                       <label className="block font-medium text-black dark:text-white">
                         Proximité restaurant ?
                       </label>
-                      <Checkbox {...register("exist_proxi_restaurant")} />
+                      <Checkbox
+                        colorScheme="green"
+                        {...register("exist_proxi_restaurant")}
+                        id="exist_proxi_restaurant"
+                      />
                     </div>
 
                     <div className="mb-6 flex w-1/3 min-w-[150px] max-w-[250px] flex-row-reverse items-center gap-2 ">
                       <label className="block font-medium text-black dark:text-white">
                         Poubelle collective ?
                       </label>
-                      <Checkbox {...register("pc_vide_ordure")} />
+                      <Checkbox
+                        colorScheme="green"
+                        {...register("pc_vide_ordure")}
+                        id="pc_vide_ordure"
+                      />
                     </div>
 
                     <div className="mb-6 flex w-1/3 min-w-[150px] max-w-[250px] flex-row-reverse items-center gap-2 ">
                       <label className="block font-medium text-black dark:text-white">
                         Espace vert ?
                       </label>
-                      <Checkbox {...register("pc_espace_vert")} />
+                      <Checkbox
+                        colorScheme="green"
+                        {...register("pc_espace_vert")}
+                        id="pc_espace_vert"
+                      />
                     </div>
 
                     <div className="mb-6 flex w-1/3 min-w-[150px] max-w-[250px] flex-row-reverse items-center gap-2 ">
                       <label className="block font-medium text-black dark:text-white">
                         Eau chaude collective ?
                       </label>
-                      <Checkbox {...register("pc_eau_chaude_collective")} />
+                      <Checkbox
+                        colorScheme="green"
+                        {...register("pc_eau_chaude_collective")}
+                        id="pc_eau_chaude_collective"
+                      />
                     </div>
 
                     <div className="mb-6 flex w-1/3 min-w-[150px] max-w-[250px] flex-row-reverse items-center gap-2 ">
                       <label className="block font-medium text-black dark:text-white">
                         Chauffage collective ?
                       </label>
-                      <Checkbox {...register("pc_chauffage_collective")} />
+                      <Checkbox
+                        colorScheme="green"
+                        {...register("pc_chauffage_collective")}
+                        id="pc_chauffage_collective"
+                      />
                     </div>
 
                     <div className="mb-6 flex w-1/3 min-w-[150px] max-w-[250px] flex-row-reverse items-center gap-2 ">
@@ -507,56 +570,77 @@ export default function CreateRealEstate({}: Props) {
                         Interphone ?
                       </label>
 
-                      <Checkbox {...register("pc_interphone")} />
+                      <Checkbox
+                        colorScheme="green"
+                        {...register("pc_interphone")}
+                        id="pc_interphone"
+                      />
                     </div>
 
                     <div className="mb-6 flex w-1/3 min-w-[150px] max-w-[250px] flex-row-reverse items-center gap-2 ">
                       <label className="block font-medium text-black dark:text-white">
                         Sous-sol ?
                       </label>
-                      <Checkbox {...register("exist_sous_sol")} />
+                      <Checkbox
+                        colorScheme="green"
+                        {...register("exist_sous_sol")}
+                        id="exist_sous_sol"
+                      />
                     </div>
 
                     <div className="mb-6 flex w-1/3 min-w-[150px] max-w-[250px] flex-row-reverse items-center gap-2 ">
                       <label className="block font-medium text-black dark:text-white">
                         Linge de maison ?
                       </label>
-                      <Checkbox {...register("dep_lingemaison")} />
+                      <Checkbox
+                        colorScheme="green"
+                        {...register("dep_lingemaison")}
+                        id="dep_lingemaison"
+                      />
                     </div>
 
                     <div className="mb-6 flex w-1/3 min-w-[150px] max-w-[250px] flex-row-reverse items-center gap-2 ">
                       <label className="block font-medium text-black dark:text-white">
                         Proximité éducation ?
                       </label>
-                      <Checkbox {...register("exist_proxi_education")} />
-                    </div>
-
-                    <div className="mb-6 flex w-1/3 min-w-[150px] max-w-[250px] flex-row-reverse items-center gap-2 ">
-                      <label className="block font-medium text-black dark:text-white">
-                        Salle à manger ?
-                      </label>
-                      <Checkbox {...register("exist_salle_manger")} />
+                      <Checkbox
+                        colorScheme="green"
+                        {...register("exist_proxi_education")}
+                        id="exist_proxi_education"
+                      />
                     </div>
 
                     <div className="mb-6 flex w-1/3 min-w-[150px] max-w-[250px] flex-row-reverse items-center gap-2 ">
                       <label className="block font-medium text-black dark:text-white">
                         Cheminée ?
                       </label>
-                      <Checkbox {...register("exist_cheminee")} />
+                      <Checkbox
+                        colorScheme="green"
+                        {...register("exist_cheminee")}
+                        id="exist_cheminee"
+                      />
                     </div>
 
                     <div className="mb-6 flex w-1/3 min-w-[150px] max-w-[250px] flex-row-reverse items-center gap-2 ">
                       <label className="block font-medium text-black dark:text-white">
                         Gardiennage ?
                       </label>
-                      <Checkbox {...register("pc_gardiennage")} />
+                      <Checkbox
+                        colorScheme="green"
+                        {...register("pc_gardiennage")}
+                        id="pc_gardiennage"
+                      />
                     </div>
 
                     <div className="mb-6 flex w-1/3 min-w-[150px] max-w-[250px] flex-row-reverse items-center gap-2 ">
                       <label className="block font-medium text-black dark:text-white">
                         Antenne TV collective ?
                       </label>
-                      <Checkbox {...register("pc_antennetv_collective")} />
+                      <Checkbox
+                        colorScheme="green"
+                        {...register("pc_antennetv_collective")}
+                        id="pc_antennetv_collective"
+                      />
                     </div>
 
                     <div className="mb-6 flex w-1/3 min-w-[150px] max-w-[250px] flex-row-reverse items-center gap-2 ">
@@ -564,29 +648,82 @@ export default function CreateRealEstate({}: Props) {
                         Balcon ?
                       </label>
 
-                      <Checkbox {...register("exist_balcon")} />
+                      <Checkbox
+                        colorScheme="green"
+                        {...register("exist_balcon")}
+                        id="exist_balcon"
+                      />
                     </div>
 
                     <div className="mb-6 flex w-1/3 min-w-[150px] max-w-[250px] flex-row-reverse items-center gap-2 ">
                       <label className="block font-medium text-black dark:text-white">
                         Proximité centre de santé ?
                       </label>
-                      <Checkbox {...register("exist_proxi_centre_sante")} />
+                      <Checkbox
+                        colorScheme="green"
+                        {...register("exist_proxi_centre_sante")}
+                        id="exist_proxi_centre_sante"
+                      />
                     </div>
 
                     <div className="mb-6 flex w-1/3 min-w-[150px] max-w-[250px] flex-row-reverse items-center gap-2 ">
-                      <label className="block font-medium text-black dark:text-white">
+                      <Checkbox
+                        colorScheme="green"
+                        {...register("pc_ascenseur")}
+                        onChange={(e) =>
+                          setValueFormCheckBox({
+                            value: e.target.checked,
+                            key: "pc_ascenseur",
+                          })
+                        }
+                        id="pc_ascenseur"
+                      >
                         Ascenseur ?
-                      </label>
+                      </Checkbox>
+                    </div>
 
-                      <Checkbox {...register("pc_ascenseur")} />
+                    <div className="mb-6 flex w-1/3 min-w-[150px] max-w-[250px] flex-row-reverse items-center gap-2 ">
+                      <Checkbox
+                        colorScheme="green"
+                        {...register("dep_tvecranplat")}
+                        onChange={(e) =>
+                          setValueFormCheckBox({
+                            value: e.target.checked,
+                            key: "dep_tvecranplat",
+                          })
+                        }
+                        id="dep_tvecranplat"
+                      >
+                        Type ecran plat ?
+                      </Checkbox>
+                    </div>
+
+                    <div className="mb-6 flex w-1/3 min-w-[150px] max-w-[250px] flex-row-reverse items-center gap-2 ">
+                      <Checkbox
+                        colorScheme="green"
+                        {...register("exist_salle_manger")}
+                        onChange={(e) =>
+                          setValueFormCheckBox({
+                            value: e.target.checked,
+                            key: "exist_salle_manger",
+                          })
+                        }
+                        id="exist_salle_manger"
+                      >
+                        Une salle a manger ?
+                      </Checkbox>
                     </div>
 
                     <div className="mb-6 flex w-1/3 min-w-[150px] max-w-[250px] flex-row-reverse items-center gap-2 ">
                       <label className="block font-medium text-black dark:text-white">
                         Lave-vaisselle ?
                       </label>
-                      <Checkbox {...register("dep_lavevaiselle")} />
+                      <Checkbox
+                        colorScheme="green"
+                        {...register("dep_lavevaiselle")}
+                        defaultChecked={true}
+                        id="dep_lavevaiselle"
+                      />
                     </div>
                   </div>
                 </div>

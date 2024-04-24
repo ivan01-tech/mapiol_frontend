@@ -116,7 +116,7 @@ const SignIn: React.FC = () => {
                     </span>
                   </div>
                   {errors.email && (
-                    <p className="text-red text-[.7rem]">
+                    <p className="text-red-600 text-[.7rem]">
                       {errors.email.message}
                     </p>
                   )}
@@ -162,7 +162,7 @@ const SignIn: React.FC = () => {
                     </span>
                   </div>
                   {errors.password && (
-                    <p className="text-red text-[.7rem]">
+                    <p className="text-red-600 text-[.7rem]">
                       {errors.password.message}
                     </p>
                   )}

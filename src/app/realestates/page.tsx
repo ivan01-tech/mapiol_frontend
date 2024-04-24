@@ -3,26 +3,17 @@ import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import CardDataStats from "@/components/CardDataStats";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Loading from "@/components/Loading";
-import TableTwo from "@/components/Tables/TableTwo";
-import Loader from "@/components/common/Loader";
-import { LanloardDataTable } from "@/components/Tables/LanloardTable2";
 import NoDataComp from "@/components/ui/Nodata";
 import { getAllLanloard } from "@/services/users.services";
 import { Lanloard } from "@/types/Utilisateur";
-import { UserType } from "@/types/users";
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
-import { useEffect } from "react";
-import { MdAdd } from "react-icons/md";
 import { RealEstateTable } from "@/components/Tables/RealEstateTable";
+
+
 const UserPagePage = () => {
   const {
     isError,
-    isSuccess,
-    isLoadingError,
     isPending,
-    isFetching,
-    isPaused,
     error,
     isLoading,
     data: usersData,
@@ -30,12 +21,13 @@ const UserPagePage = () => {
     queryFn: getAllLanloard<Lanloard[]>,
     queryKey: ["getAllUser"],
   });
-  const dataTable = usersData
-    ? usersData?.map((prev) => ({
-        ...prev,
-        type_user: prev.type_user.libelle,
-      }))
-    : [];
+  const dataTable =
+    usersData && usersData.length > 0
+      ? usersData?.map((prev) => ({
+          ...prev,
+          type_user: prev.type_user.libelle,
+        }))
+      : [];
   console.log("userdata", usersData);
 
   return (

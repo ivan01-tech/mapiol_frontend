@@ -12,6 +12,7 @@ import { store } from "@/redux/store";
 import { Toaster } from "react-hot-toast";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import SecureLS from "secure-ls";
+import { ChakraProvider } from "@chakra-ui/react";
 
 export const queryClient = new QueryClient();
 
@@ -36,16 +37,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body suppressHydrationWarning={true}>
-        <Provider store={store}>
-          <div className="dark:bg-boxdark-2 dark:text-bodydark">
-            <QueryClientProvider client={queryClient}>
-              <ReactQueryDevtools initialIsOpen={false} />
+        <ChakraProvider>
+          <Provider store={store}>
+            <div className="dark:bg-boxdark-2 dark:text-bodydark">
+              <QueryClientProvider client={queryClient}>
+                <ReactQueryDevtools initialIsOpen={false} />
 
-              {children}
-              <Toaster />
-            </QueryClientProvider>
-          </div>
-        </Provider>
+                {children}
+                <Toaster />
+              </QueryClientProvider>
+            </div>
+          </Provider>
+        </ChakraProvider>
       </body>
     </html>
   );
