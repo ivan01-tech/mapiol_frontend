@@ -1,9 +1,9 @@
 "use client";
-
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createLanloard, createRealestate } from "@/services/landlord.services";
+import { createRealestate } from "@/services/landlord.services";
 import { Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
@@ -16,16 +16,28 @@ import {
 } from "@/models/RealEstateModel";
 import { Checkbox, Divider } from "@chakra-ui/react";
 import { getAllTowns, getAllstatetType } from "@/services/generale.services";
-import { EstateType, Town } from "@/types/Utilisateur";
+import { EstateType, Lanloard, Town } from "@/types/Utilisateur";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/redux/userSlice";
+import { getAllLanloard } from "@/services/users.services";
+import UploadImages from "@/components/UploadImages";
 
 type Props = {};
 export default function CreateRealEstate({}: Props) {
+  const {
+    isLoadingError,
+    isFetching,
+    isLoading,
+    data: landlords,
+  } = useQuery({
+    queryFn: getAllLanloard<Lanloard[]>,
+    queryKey: ["getAllLanloard"],
+  });
+
   const { user } = useSelector(selectUser);
   const { data: towns } = useQuery({
     queryFn: getAllTowns<Town[]>,
-    queryKey: ["getAllUser"],
+    queryKey: ["getAllTowns"],
   });
 
   const { data: typeEstate } = useQuery({
@@ -54,18 +66,13 @@ export default function CreateRealEstate({}: Props) {
     register,
     setValue,
     control,
+
     trigger,
     handleSubmit,
     formState: { errors },
-  } = useForm<RealEstateType>({
-    defaultValues: {
-      ville_id: towns ? Number(towns[0].id) : 0,
-      typeBien_id: typeEstate ? Number(typeEstate[0].id) : 0,
-      exist_salle_manger: false,
-      proprietaire_id: user?.id,
-      surface: formData.surface,
-    },
-  });
+  } = useForm<RealEstateType>({});
+  const [imagesUrl, setImageUrl] = useState<string[]>([]);
+
   const router = useRouter();
 
   const handleChange = (
@@ -74,7 +81,13 @@ export default function CreateRealEstate({}: Props) {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
   };
+  const setImageUrlFoo = (images: string[]) => {
+    setImageUrl((prev) => [...prev, ...images]);
+  };
 
+  const putImageUrlFoo = (images: string[]) => {
+    setImageUrl(images);
+  };
   const onSubmit = (data: RealEstateType) => {
     console.log(data);
     try {
@@ -84,8 +97,9 @@ export default function CreateRealEstate({}: Props) {
         // typeBien_id:
         //   !data.typeBien_id && typeEstate && Number(typeEstate[1].id),
         exist_salle_manger: false,
-        proprietaire_id: user?.id,
+        // proprietaire_id: user?.id,
         surface: formData.surface,
+        images: imagesUrl,
       })
         .then((resp) => {
           console.log("response: ", resp.slug);
@@ -111,6 +125,7 @@ export default function CreateRealEstate({}: Props) {
   const booleanKeysArry = Object.entries(schemaRealEstate.shape).filter(
     ([prev]) => booleanKeys.includes(prev),
   );
+
   return (
     <DefaultLayout>
       <div className="flex justify-between">
@@ -137,6 +152,34 @@ export default function CreateRealEstate({}: Props) {
               </div>
             )}
             <div className="w-full p-6.5">
+              <div className="mb-6 min-w-[150px]">
+                <label className="mb-2.5 block font-medium text-black dark:text-white">
+                  Propriétaire :
+                </label>
+                {landlords && (
+                  <div className="relative flex-1">
+                    <select
+                      name="proprietaire_id"
+                      onChange={(e) => {
+                        console.log(e.target.value);
+                        setValue("proprietaire_id", Number(e.target.value));
+                      }}
+                      className="w-full  border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-secondary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-secondary"
+                    >
+                      {landlords?.map((prev) => (
+                        <option key={prev.id} value={prev.id}>
+                          {prev.nom}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+                {errors.proprietaire_id && (
+                  <p className="text-[.7rem] text-red-600">
+                    {errors.proprietaire_id.message}
+                  </p>
+                )}
+              </div>
               <div className="mb-4.5 flex w-full flex-col gap-6 ">
                 <div className="flex flex-wrap justify-stretch gap-2">
                   <div className="mb-6 min-w-[250px] flex-1">
@@ -149,7 +192,7 @@ export default function CreateRealEstate({}: Props) {
                         {...register("nom", {
                           required: "nom is required",
                         })}
-                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-secondary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-secondary"
                       />
                     </div>
                     {errors.nom && (
@@ -169,7 +212,7 @@ export default function CreateRealEstate({}: Props) {
                         {...register("addresse", {
                           required: "addresse is required",
                         })}
-                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-secondary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-secondary"
                       />
                     </div>
                     {errors.addresse && (
@@ -179,7 +222,6 @@ export default function CreateRealEstate({}: Props) {
                     )}
                   </div>
                 </div>
-
                 {/*  */}
                 <div className="flex flex-wrap justify-stretch gap-2">
                   <div className="mb-6 min-w-[150px] flex-1">
@@ -192,7 +234,7 @@ export default function CreateRealEstate({}: Props) {
                         {...register("nbrchambre", {
                           required: "nbrchambre is required",
                         })}
-                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-secondary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-secondary"
                       />
                     </div>
                     {errors.nbrchambre && (
@@ -211,7 +253,7 @@ export default function CreateRealEstate({}: Props) {
                         {...register("nbrescalier", {
                           required: "nbrescalier is required",
                         })}
-                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-secondary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-secondary"
                       />
                     </div>
                     {errors.nbrescalier && (
@@ -230,7 +272,7 @@ export default function CreateRealEstate({}: Props) {
                         {...register("nbrbatiment", {
                           required: "nbrbatiment is required",
                         })}
-                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-secondary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-secondary"
                       />
                     </div>
                     {errors.nbrbatiment && (
@@ -250,7 +292,7 @@ export default function CreateRealEstate({}: Props) {
                         {...register("numeroporte", {
                           required: "numeroporte is required",
                         })}
-                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-secondary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-secondary"
                       />
                     </div>
                     {errors.numeroporte && (
@@ -275,7 +317,7 @@ export default function CreateRealEstate({}: Props) {
                             console.log(e.target.value);
                             setValue("ville_id", Number(e.target.value));
                           }}
-                          className="w-full  border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                          className="w-full  border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-secondary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-secondary"
                         >
                           {towns?.map((prev) => (
                             <option key={prev.id} value={prev.id}>
@@ -301,7 +343,7 @@ export default function CreateRealEstate({}: Props) {
                         {...register("code_postal", {
                           required: "code_postal is required",
                         })}
-                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-secondary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-secondary"
                       />
                     </div>
                     {errors.code_postal && (
@@ -322,10 +364,10 @@ export default function CreateRealEstate({}: Props) {
                         type="number"
                         value={formData.surface}
                         onChange={handleChange}
-                        className=" rounded-lg rounded-br-none rounded-tr-none border border-r-0 border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                        className=" rounded-lg rounded-br-none rounded-tr-none border border-r-0 border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-secondary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-secondary"
                       />
                       <select
-                        className="w-1/2 rounded-lg rounded-bl-none rounded-tl-none border border-l-0 border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                        className="w-1/2 rounded-lg rounded-bl-none rounded-tl-none border border-l-0 border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-secondary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-secondary"
                         value={formData.uniteSurface}
                         name="uniteSurface"
                         onChange={handleChange}
@@ -341,7 +383,6 @@ export default function CreateRealEstate({}: Props) {
                     )}
                   </div>
                 </div>
-
                 <div className="flex flex-wrap justify-stretch gap-2">
                   <div className="mb-6 min-w-[250px] flex-1">
                     <label className="mb-2.5 block font-medium text-black dark:text-white">
@@ -353,7 +394,7 @@ export default function CreateRealEstate({}: Props) {
                         {...register("zoneStationnement", {
                           required: "zoneStationnement is required",
                         })}
-                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-secondary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-secondary"
                       />
                     </div>
                     {errors.zoneStationnement && (
@@ -373,7 +414,7 @@ export default function CreateRealEstate({}: Props) {
                         {...register("typemouvement", {
                           required: "typemouvement is required",
                         })}
-                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-secondary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-secondary"
                       />
                     </div>
                     {errors.typemouvement && (
@@ -393,7 +434,7 @@ export default function CreateRealEstate({}: Props) {
                         {...register("nbr_salle_bain", {
                           required: "nbr_salle_bain is required",
                         })}
-                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-secondary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-secondary"
                       />
                     </div>
                     {errors.nbr_salle_bain && (
@@ -403,9 +444,7 @@ export default function CreateRealEstate({}: Props) {
                     )}
                   </div>
                 </div>
-
                 {/*  */}
-
                 <div className="flex flex-wrap justify-stretch gap-2">
                   <div className="mb-6 min-w-[150px] flex-1">
                     <label className="mb-2.5 block font-medium text-black dark:text-white">
@@ -419,7 +458,7 @@ export default function CreateRealEstate({}: Props) {
                             onChange={(e) => {
                               setValue("typeBien_id", Number(e.target.value));
                             }}
-                            className="w-full  border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                            className="w-full  border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-secondary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-secondary"
                           >
                             {typeEstate?.map((prev) => (
                               <option key={prev.id} value={prev.id}>
@@ -447,7 +486,7 @@ export default function CreateRealEstate({}: Props) {
                         {...register("anneeconstruction", {
                           required: "anneeconstruction is required",
                         })}
-                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-secondary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-secondary"
                       />
                     </div>
                     {errors.anneeconstruction && (
@@ -457,6 +496,32 @@ export default function CreateRealEstate({}: Props) {
                     )}
                   </div>
                 </div>
+                {/* images */}
+                <UploadImages
+                  putImageUrlFoo={putImageUrlFoo}
+                  setImageUrlFoo={setImageUrlFoo}
+                  images={imagesUrl}
+                />
+                {/* end images */}
+                {/* the map section */}
+                <div className="m-8 flex h-[300px] w-full items-center justify-center overflow-hidden">
+                  <MapContainer
+                    center={[51.505, -0.09]}
+                    zoom={13}
+                    scrollWheelZoom={false}
+                  >
+                    <TileLayer
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                    <Marker position={[51.505, -0.09]}>
+                      <Popup>
+                        A pretty CSS3 popup. <br /> Easily customizable.
+                      </Popup>
+                    </Marker>
+                  </MapContainer>
+                </div>
+                {/* end map section */}
                 <div className="flex flex-col gap-4 rounded border border-stroke p-3">
                   <h2 className="text-center text-title-md font-bold uppercase">
                     CHAmps optionnel
@@ -496,17 +561,6 @@ export default function CreateRealEstate({}: Props) {
                         colorScheme="green"
                         {...register("internet")}
                         id="internet"
-                      />
-                    </div>
-
-                    <div className="mb-6 flex w-1/3 min-w-[150px] max-w-[250px] flex-row-reverse items-center gap-2 ">
-                      <label className="block font-medium text-black dark:text-white">
-                        Téléviseur écran plat ?
-                      </label>
-                      <Checkbox
-                        colorScheme="green"
-                        {...register("dep_tvecranplat")}
-                        id="dep_tvecranplat"
                       />
                     </div>
 
@@ -721,7 +775,6 @@ export default function CreateRealEstate({}: Props) {
                       <Checkbox
                         colorScheme="green"
                         {...register("dep_lavevaiselle")}
-                        defaultChecked={true}
                         id="dep_lavevaiselle"
                       />
                     </div>

@@ -3,10 +3,8 @@ import DarkModeSwitcher from "./DarkModeSwitcher";
 import DropdownMessage from "./DropdownMessage";
 import DropdownNotification from "./DropdownNotification";
 import DropdownUser from "./DropdownUser";
-import Image from "next/image";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/redux/userSlice";
-import Buttons from "@/app/ui/buttons/page";
 
 const Header = (props: {
   sidebarOpen: string | boolean | undefined;
@@ -121,7 +119,7 @@ const Header = (props: {
               <DropdownUser />
             ) : (
               <Link
-                href="/"
+                href="/auth/lanlords/login"
                 className="inline-flex items-center justify-center rounded-md bg-primary px-3 py-2 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
               >
                 Login

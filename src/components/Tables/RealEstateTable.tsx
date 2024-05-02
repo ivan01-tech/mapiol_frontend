@@ -52,6 +52,8 @@ import toast from "react-hot-toast";
 import { queryClient } from "@/app/layout";
 import Link from "next/link";
 import Buttons from "@/app/ui/buttons/page";
+import { RealEstateTableData } from "@/app/realestates/page";
+import Image from "next/image";
 
 const handlerDeleteUser = async (user: number) => {
   deleteLanLord<any>(user)
@@ -67,22 +69,7 @@ const handlerDeleteUser = async (user: number) => {
     });
 };
 
-export const columns: ColumnDef<{
-  type_user: string;
-  id: number;
-  email: string;
-  addresse: string;
-  login: string;
-  nom: string;
-  password: string;
-  sexe: string;
-  telephone: string;
-  statut: string;
-  slug: string;
-  deleted_at: null;
-  created_at: string;
-  updated_at: string;
-}>[] = [
+export const columns: ColumnDef<RealEstateTableData>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -120,73 +107,23 @@ export const columns: ColumnDef<{
     ),
     cell: ({ row }) => <div className="">{row.getValue("id")}</div>,
   },
-
-  {
-    accessorKey: "email",
-    header: ({ column }) => (
-      <>
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Email
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      </>
-    ),
-    cell: ({ row }) => <div className="">{row.getValue("email")}</div>,
-  },
-  {
-    accessorKey: "addresse",
-    header: "Addresse",
-    cell: ({ row }) => (
-      <div className="text-center font-medium">{row.getValue("addresse")}</div>
-    ),
-  },
-  {
-    accessorKey: "login",
-    header: ({ column }) => (
-      <>
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Login
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      </>
-    ),
-    cell: ({ row }) => <div className="">{row.getValue("login")}</div>,
-  },
   {
     accessorKey: "nom",
     header: "Nom",
     cell: ({ row }) => <div className="capitalize">{row.getValue("nom")}</div>,
   },
   {
-    accessorKey: "password",
-    header: "Password",
+    accessorKey: "proprietaire_id",
+    header: "proprietaire_id",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("password")}</div>
+      <div className="capitalize">{row.getValue("proprietaire_id")}</div>
     ),
   },
   {
-    accessorKey: "sexe",
-    header: "Sexe",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("sexe")}</div>,
-  },
-  {
-    accessorKey: "telephone",
-    header: "Telephone",
+    accessorKey: "image",
+    header: "image",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("telephone")}</div>
-    ),
-  },
-  {
-    accessorKey: "type_user",
-    header: "Type User",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("type_user")}</div>
+      <Image alt="une image" width={50} height={50} src={""} className="" />
     ),
   },
   {
@@ -194,18 +131,6 @@ export const columns: ColumnDef<{
     header: "Statut",
     cell: ({ row }) => (
       <div className="capitalize">{row.getValue("statut")}</div>
-    ),
-  },
-  {
-    accessorKey: "slug",
-    header: "Slug",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("slug")}</div>,
-  },
-  {
-    accessorKey: "deleted_at",
-    header: "Deleted At",
-    cell: ({ row }) => (
-      <div className="capitalize">{formatDate(row.getValue("deleted_at"))}</div>
     ),
   },
   {
@@ -265,6 +190,9 @@ export const columns: ColumnDef<{
               View details
             </DropdownMenuItem> */}
             <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <Link href={"/realestates/" + InformationCreation.id}>Voir</Link>
+            </DropdownMenuItem>
             <DropdownMenuItem>Activate</DropdownMenuItem>
             <DropdownMenuItem>Update</DropdownMenuItem>
             <DropdownMenuItem
@@ -280,22 +208,7 @@ export const columns: ColumnDef<{
 ];
 
 type Props = {
-  data: {
-    type_user: string;
-    id: number;
-    email: string;
-    addresse: string;
-    login: string;
-    nom: string;
-    password: string;
-    sexe: string;
-    telephone: string;
-    statut: string;
-    slug: string;
-    deleted_at: null;
-    created_at: string;
-    updated_at: string;
-  }[];
+  data: RealEstateTableData[];
 };
 
 export function RealEstateTable({ data: dataTable }: Props) {

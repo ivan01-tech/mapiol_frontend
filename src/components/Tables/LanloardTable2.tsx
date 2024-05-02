@@ -266,7 +266,13 @@ export const columns: ColumnDef<{
             </DropdownMenuItem> */}
             <DropdownMenuSeparator />
             <DropdownMenuItem>Activate</DropdownMenuItem>
-            <DropdownMenuItem>Update</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link
+                href={"/users/landlords/" + InformationCreation.id + "/update"}
+              >
+                Update
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => handlerDeleteUser(Number(InformationCreation.id))}
             >

@@ -17,5 +17,19 @@ export function formatDate(dateString: string): string {
   });
 }
 
+export const colors = {
+  primary_1: "#192340",
+  primary_2: "#304173",
+  primary_3: "#D99152",
+  primary_4: "#A6837B",
 
-export const USER_TOKEN_STORAGE = 'mapiol_token'
+  secondary_1: "#0D1326",
+  secondary_2: "#122140",
+  secondary_3: "#BCBCBC",
+  secondary_4: "#593A14",
+};
+
+export const USER_TOKEN_STORAGE = "mapiol_token";
+
+
+export const FIREBASE_IMAGES_FOLDER  = "mapiol_images/"

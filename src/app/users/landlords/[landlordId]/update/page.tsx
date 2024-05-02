@@ -17,7 +17,6 @@ export default function CreateLanLoard({}: Props) {
     isError,
     isSuccess,
     isPending,
-    isPaused,
     error,
     mutateAsync,
     data: usersData,
@@ -93,7 +92,7 @@ export default function CreateLanLoard({}: Props) {
                     />
                   </div>
                   {errors.email && (
-                    <p className="text-red-600 text-[.7rem]">
+                    <p className="text-[.7rem] text-red-600">
                       {errors.email.message}
                     </p>
                   )}
@@ -114,7 +113,7 @@ export default function CreateLanLoard({}: Props) {
                     />
                   </div>
                   {errors.password && (
-                    <p className="text-red-600 text-[.7rem]">
+                    <p className="text-[.7rem] text-red-600">
                       {errors.password.message}
                     </p>
                   )}
@@ -133,7 +132,7 @@ export default function CreateLanLoard({}: Props) {
                     />
                   </div>
                   {errors.nom && (
-                    <p className="text-red-600 text-[.7rem]">
+                    <p className="text-[.7rem] text-red-600">
                       {errors.nom.message}
                     </p>
                   )}
@@ -154,7 +153,7 @@ export default function CreateLanLoard({}: Props) {
                     />
                   </div>
                   {errors.telephone && (
-                    <p className="text-red-600 text-[.7rem]">
+                    <p className="text-[.7rem] text-red-600">
                       {errors.telephone.message}
                     </p>
                   )}
@@ -175,7 +174,7 @@ export default function CreateLanLoard({}: Props) {
                     />
                   </div>
                   {errors.addresse && (
-                    <p className="text-red-600 text-[.7rem]">
+                    <p className="text-[.7rem] text-red-600">
                       {errors.addresse.message}
                     </p>
                   )}
@@ -196,7 +195,7 @@ export default function CreateLanLoard({}: Props) {
                     />
                   </div>
                   {errors.sexe && (
-                    <p className="text-red-600 text-[.7rem]">
+                    <p className="text-[.7rem] text-red-600">
                       {errors.sexe.message}
                     </p>
                   )}

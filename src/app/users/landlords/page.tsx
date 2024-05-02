@@ -14,6 +14,7 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useEffect } from "react";
 import { MdAdd } from "react-icons/md";
+import CardDataStatsCustom from "@/components/CardDataStatsCustom";
 const UserPagePage = () => {
   const {
     isError,
@@ -44,7 +45,7 @@ const UserPagePage = () => {
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-        <CardDataStats title="Total views" total="$3.456K" rate="0.43%" levelUp>
+        <CardDataStatsCustom title="Nombre Total" total={`${usersData?.length}`} >
           <svg
             className="fill-primary dark:fill-white"
             width="22"
@@ -62,7 +63,7 @@ const UserPagePage = () => {
               fill=""
             />
           </svg>
-        </CardDataStats>
+        </CardDataStatsCustom>
       </div>
       <div className="my-4">
         {isLoading || isPending ? (

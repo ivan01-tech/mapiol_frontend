@@ -25,7 +25,7 @@ export const URLS = {
     delete: (id: number) => "/utilisateurs/delete/" + id + "/",
   },
   REAL_ESTATE: {
-    index: "",
+    index: "/proprieter/",
     create: "/proprieter/create/",
   },
 

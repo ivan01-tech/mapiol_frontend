@@ -13,6 +13,7 @@ import { Toaster } from "react-hot-toast";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import SecureLS from "secure-ls";
 import { ChakraProvider } from "@chakra-ui/react";
+import { MapContainer, TileLayer } from "react-leaflet";
 
 export const queryClient = new QueryClient();
 

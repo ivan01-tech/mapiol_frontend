@@ -4,12 +4,21 @@ import CardDataStats from "@/components/CardDataStats";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Loading from "@/components/Loading";
 import NoDataComp from "@/components/ui/Nodata";
-import { getAllLanloard } from "@/services/users.services";
-import { Lanloard } from "@/types/Utilisateur";
+import { Lanloard, RealEstate } from "@/types/Utilisateur";
 import { useQuery } from "@tanstack/react-query";
 import { RealEstateTable } from "@/components/Tables/RealEstateTable";
+import { getAllRealEstate } from "@/services/products.services";
+import CardDataStatsCustom from "@/components/CardDataStatsCustom";
 
-
+export type RealEstateTableData = {
+  nom: string;
+  statut: string;
+  updated_at: string;
+  created_at: string;
+  image: string;
+  proprietaire_id: number;
+  id: number;
+};
 const UserPagePage = () => {
   const {
     isError,
@@ -18,17 +27,26 @@ const UserPagePage = () => {
     isLoading,
     data: usersData,
   } = useQuery({
-    queryFn: getAllLanloard<Lanloard[]>,
-    queryKey: ["getAllUser"],
+    queryFn: getAllRealEstate<RealEstate[]>,
+    queryKey: ["getAllRealEstate"],
   });
-  const dataTable =
-    usersData && usersData.length > 0
-      ? usersData?.map((prev) => ({
-          ...prev,
-          type_user: prev.type_user.libelle,
-        }))
-      : [];
-  console.log("userdata", usersData);
+
+  const arrayData: RealEstateTableData[] = [];
+
+  usersData &&
+    usersData.forEach((element) => {
+      arrayData.push({
+        nom: element.nom,
+        id: element.id,
+        image: JSON.parse(element.img)[0].url,
+        statut: element.statut,
+        created_at: element.created_at,
+        proprietaire_id: element.proprietaire_id,
+        updated_at: element.updated_at,
+      });
+    });
+
+  console.log("userdata", arrayData);
 
   return (
     <DefaultLayout>
@@ -37,7 +55,10 @@ const UserPagePage = () => {
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-        <CardDataStats title="Total views" total="$3.456K" rate="0.43%" levelUp>
+        <CardDataStatsCustom
+          title="Nombre Total"
+          total={`${usersData?.length || 0}`}
+        >
           <svg
             className="fill-primary dark:fill-white"
             width="22"
@@ -55,7 +76,7 @@ const UserPagePage = () => {
               fill=""
             />
           </svg>
-        </CardDataStats>
+        </CardDataStatsCustom>
       </div>
       <div className="my-4">
         {isLoading || isPending ? (
@@ -65,7 +86,7 @@ const UserPagePage = () => {
         ) : usersData.length == 0 ? (
           <NoDataComp objectType="Users" />
         ) : (
-          <RealEstateTable data={dataTable} />
+          <RealEstateTable data={arrayData} />
         )}
       </div>
     </DefaultLayout>

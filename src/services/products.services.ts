@@ -1,4 +1,4 @@
-import { makeSucureRequest } from "@/lib/makeRequest";
+import { makeRequest, makeSucureRequest } from "@/lib/makeRequest";
 import { URLS } from "@/lib/url";
 
 export async function getAllProducts<Z>() {
@@ -24,5 +24,12 @@ export async function searchProductByName<Z>(params: any) {
   return makeSucureRequest<Z>(URLS.PRODUCTS.SEARCH_BY_NAME, {
     method: "GET",
     params,
+  });
+}
+
+
+export async function getAllRealEstate<T>() {
+  return makeRequest<T>(URLS.REAL_ESTATE.index, {
+    method: "GET",
   });
 }

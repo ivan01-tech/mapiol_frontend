@@ -65,4 +65,60 @@ export const booleanKeys = [
   "dep_lavevaiselle",
 ];
 
+
+import {
+  FaUtensils,
+  FaCar,
+  FaWifi,
+  FaTv,
+  FaBed,
+  FaHome,
+  FaFire,
+  FaBath,
+  FaTree,
+  FaArrowsAltV,
+  FaBookOpen,
+  FaBuilding,
+  FaHospital,
+  FaPhoneAlt,
+  FaSatelliteDish,
+  FaSink,
+  FaThermometerHalf,
+  FaTshirt,
+  FaUserShield,
+  FaFireExtinguisher,
+} from "react-icons/fa";
+import {
+  RiBuilding2Fill,
+  RiHotelBedFill,
+  RiParkingBoxFill,
+  RiRestaurantFill,
+} from "react-icons/ri";
+
+const icons = {
+  exist_salle_manger: <FaUtensils />, 
+  ungarage: <RiParkingBoxFill />, 
+  unecave: <FaHome />, 
+  internet: <FaWifi />, 
+  dep_tvecranplat: <FaTv />, 
+  exist_proxi_restaurant: <RiRestaurantFill />, 
+  pc_vide_ordure: <FaCar />, 
+  pc_espace_vert: <FaTree />, 
+  pc_eau_chaude_collective: <FaFire />, 
+  pc_chauffage_collective: <FaThermometerHalf />, 
+  pc_interphone: <FaPhoneAlt />, 
+  exist_sous_sol: <RiBuilding2Fill />, 
+  dep_lingemaison: <FaTshirt />, 
+  exist_proxi_education: <FaBookOpen />, 
+  exist_cheminee: <FaFireExtinguisher />, 
+  pc_gardiennage: <FaUserShield />, 
+  pc_antennetv_collective: <FaSatelliteDish />, 
+  exist_balcon: <FaBuilding />, 
+  exist_proxi_centre_sante: <FaHospital />, 
+  pc_ascenseur: <FaArrowsAltV />, 
+  dep_lavevaiselle: <FaSink />, 
+};
+
+export default icons;
+
 export type RealEstateType = z.infer<typeof schemaRealEstate>;

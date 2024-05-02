@@ -50,13 +50,14 @@ export default function SignInAccount() {
         console.log("response: ", resp.slug);
         dispatch(
           addUserInfo({
+            // TODO
             email: resp.email,
             id: resp.id,
             nom: resp.nom,
             password: resp.password,
             slug: resp.slug,
             statut: resp.statut,
-            type_user: resp.type_user,
+            type_user: { libelle: resp.type_user },
           }),
         );
         toast.success("Success!");
@@ -83,10 +84,10 @@ export default function SignInAccount() {
             <CardHeader className="space-y-1">
               <CardTitle className="text-2xl ">
                 <Image
-                  width={150}
-                  height={150}
-                  src="/images/logo/mapiol_logo.jpeg"
-                  className="w-28 rounded-full lg:w-32"
+                  width={500}
+                  height={500}
+                  src="/images/logo/mapiol_logo.png"
+                  className="w-28  object-contain"
                   alt="Logo mapiol"
                 />
               </CardTitle>
@@ -103,7 +104,7 @@ export default function SignInAccount() {
                     required: "Address is required",
                   })}
                   placeholder="Enter your address"
-                  className="w-full rounded-lg border  border-primary bg-transparent py-4 pl-6 pr-10 text-black outline-none focus-visible:shadow-none dark:border-form-strokedark dark:border-primary dark:bg-form-input dark:text-white"
+                  className="w-full rounded-lg border  border-secondary bg-transparent py-4 pl-6 pr-10 text-black outline-none focus-visible:shadow-none dark:border-form-strokedark dark:border-secondary dark:bg-form-input dark:text-white"
                 />
                 {errors.email && (
                   <p className="text-[.7rem] text-red-500">
@@ -123,7 +124,7 @@ export default function SignInAccount() {
                     required: "Address is required",
                   })}
                   placeholder="Enter your address"
-                  className="w-full rounded-lg border  border-primary bg-transparent py-4 pl-6 pr-10 text-black outline-none focus-visible:shadow-none dark:border-form-strokedark dark:border-primary dark:bg-form-input dark:text-white"
+                  className="w-full rounded-lg border  border-secondary bg-transparent py-4 pl-6 pr-10 text-black outline-none focus-visible:shadow-none dark:border-form-strokedark dark:border-secondary dark:bg-form-input dark:text-white"
                 />
                 {errors.password && (
                   <p className="text-[.7rem] text-red-500">
