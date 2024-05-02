@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import toast from "react-hot-toast";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,7 +10,6 @@ import { UserType } from "@/types/users";
 import { useMutation } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
-import { registerUser } from "@/app/services/users.service";
 import { UserLogin, UserLoginType } from "@/models/UserLoginType";
 import { addUserInfo, clearUser } from "@/redux/userSlice";
 import { loginUser } from "@/services/users.services";
@@ -244,7 +242,7 @@ const SignIn: React.FC = () => {
                       type="email"
                       {...register("email", { required: true })}
                       placeholder="Enter your email"
-                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-secondary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-secondary"
                     />
 
                     <span className="absolute right-4 top-4">
@@ -281,12 +279,12 @@ const SignIn: React.FC = () => {
                       // type="password"
                       // {...register("password", { required: true })}
                       // placeholder=""
-                      // className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-white outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input  dark:focus:border-primary"
+                      // className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-white outline-none focus:border-secondary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input  dark:focus:border-secondary"
 
                       type="password"
                       {...register("password", { required: true })}
                       placeholder="Enter your password"
-                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-secondary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-secondary"
                     />
 
                     <span className="absolute right-4 top-4">
@@ -325,7 +323,7 @@ const SignIn: React.FC = () => {
                     <input
                       type="submit"
                       value="Sign In"
-                      className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
+                      className="w-full cursor-pointer rounded-lg border border-secondary bg-primary p-4 text-white transition hover:bg-opacity-90"
                     />
                   )}
                 </div>

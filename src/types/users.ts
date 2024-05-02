@@ -1,15 +1,20 @@
-interface IUser {
-  _id: string;
+ interface IUser {
+  id: number;
+  email: string;
+  addresse: string;
+  login: string;
+  nom: string;
+  password: string;
+  sexe: string;
+  telephone: string;
+  api_token: string;
+  type_user: {
+    libelle: string;
+  };
+  statut: string;
+  slug: string;
+  deleted_at: null;
   created_at: string;
   updated_at: string;
-  deleted_at: string | null;
-  nom: string;
-  adresse: string;
-  email: string;
-  login: string;
-  telephone: string;
-  sexe: string;
-  roles: string;
-  statut: string;
 }
 export type UserType = IUser;

@@ -8,7 +8,7 @@ export const axiosAuth = axios.create({
     "Content-Type": "application/json",
     Accept: "application/json",
   },
-  withCredentials: true,
+  // withCredentials: true,
 });
 
 // Instance Axios pour les requêtes non authentifiées

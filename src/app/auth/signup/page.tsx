@@ -12,11 +12,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { UserSignUp, UserSignUpType } from "@/models/UserSignUp";
 import PhoneInputWithCountrySelect from "react-phone-number-input";
 import { PhoneInput } from "react-international-phone";
-import { registerUser } from "@/app/services/users.service";
 import { UserType } from "@/types/users";
 import { useDispatch } from "react-redux";
 import { addUserInfo } from "@/redux/userSlice";
 import { ButtonLoading } from "@/components/ui/BuutonLoading";
+import { registerUser } from "@/services/users.services";
 
 const SignUp: React.FC = () => {
   const [phone, setPhone] = useState("");
@@ -252,7 +252,7 @@ const SignUp: React.FC = () => {
                       type="text"
                       {...register("nom", { required: true })}
                       placeholder="Enter your full name"
-                      className="w-full  rounded-lg border border-stroke bg-transparent py-2 pl-4 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      className="w-full  rounded-lg border border-stroke bg-transparent py-2 pl-4 pr-10 text-black outline-none focus:border-secondary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-secondary"
                     />
 
                     <span className="absolute right-4 top-2">
@@ -293,7 +293,7 @@ const SignUp: React.FC = () => {
                       {...register("email", { required: true })}
                       type="email"
                       placeholder="Enter your email"
-                      className="w-full rounded-lg border border-stroke bg-transparent py-2 pl-4 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      className="w-full rounded-lg border border-stroke bg-transparent py-2 pl-4 pr-10 text-black outline-none focus:border-secondary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-secondary"
                     />
 
                     <span className="absolute right-4 top-2">
@@ -331,7 +331,7 @@ const SignUp: React.FC = () => {
                       type="password"
                       {...register("password", { required: true })}
                       placeholder="Enter your password"
-                      className="w-full rounded-lg border border-stroke bg-transparent py-2 pl-4 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      className="w-full rounded-lg border border-stroke bg-transparent py-2 pl-4 pr-10 text-black outline-none focus:border-secondary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-secondary"
                     />
 
                     <span className="absolute right-4 top-2">
@@ -372,7 +372,7 @@ const SignUp: React.FC = () => {
                       type="password"
                       {...register("confirm_password", { required: true })}
                       placeholder="Re-enter your password"
-                      className="w-full rounded-lg border border-stroke bg-transparent py-2 pl-4 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      className="w-full rounded-lg border border-stroke bg-transparent py-2 pl-4 pr-10 text-black outline-none focus:border-secondary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-secondary"
                     />
 
                     <span className="absolute right-4 top-2">
@@ -419,7 +419,7 @@ const SignUp: React.FC = () => {
                         setValue("telephone", act);
                       }}
                       value={phone}
-                      className="w-full rounded-lg border border-stroke bg-transparent py-2 pl-4 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      className="w-full rounded-lg border border-stroke bg-transparent py-2 pl-4 pr-10 text-black outline-none focus:border-secondary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-secondary"
                     />
 
                     {/* <PhoneInputWithCountrySelect
@@ -451,7 +451,7 @@ const SignUp: React.FC = () => {
                       {...register("login", { required: true })}
                       type="text"
                       placeholder="Re-enter your password"
-                      className="w-full rounded-lg border border-stroke bg-transparent py-2 pl-4 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      className="w-full rounded-lg border border-stroke bg-transparent py-2 pl-4 pr-10 text-black outline-none focus:border-secondary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-secondary"
                     />
                   </div>
                   {errors.login && (
@@ -469,7 +469,7 @@ const SignUp: React.FC = () => {
                       {...register("adresse", { required: true })}
                       type="text"
                       placeholder="Adresse"
-                      className="w-full rounded-lg border border-stroke bg-transparent py-2 pl-4 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      className="w-full rounded-lg border border-stroke bg-transparent py-2 pl-4 pr-10 text-black outline-none focus:border-secondary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-secondary"
                     />
                   </div>
                   {errors.adresse && (
@@ -487,7 +487,7 @@ const SignUp: React.FC = () => {
                     <select
                       {...register("sexe", { required: true })}
                       id=""
-                      className="w-full rounded-lg border border-stroke bg-transparent py-2 pl-4 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      className="w-full rounded-lg border border-stroke bg-transparent py-2 pl-4 pr-10 text-black outline-none focus:border-secondary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-secondary"
                     >
                       <option value="Homme">Homme</option>
                       <option value="Femme">Femme</option>
@@ -507,7 +507,7 @@ const SignUp: React.FC = () => {
                       <input
                         type="submit"
                         value="Sign In"
-                        className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
+                        className="w-full cursor-pointer rounded-lg border border-secondary bg-primary p-4 text-white transition hover:bg-opacity-90"
                       />
                     )}
                   </div>

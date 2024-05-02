@@ -94,7 +94,7 @@ const SignIn: React.FC = () => {
                       type="email"
                       {...register("email", { required: true })}
                       placeholder="Enter your email"
-                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-secondary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-secondary"
                     />
 
                     <span className="absolute right-4 top-4">
@@ -116,7 +116,7 @@ const SignIn: React.FC = () => {
                     </span>
                   </div>
                   {errors.email && (
-                    <p className="text-[.7rem] text-red">
+                    <p className="text-red-600 text-[.7rem]">
                       {errors.email.message}
                     </p>
                   )}
@@ -131,12 +131,12 @@ const SignIn: React.FC = () => {
                       // type="password"
                       // {...register("password", { required: true })}
                       // placeholder=""
-                      // className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-white outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input  dark:focus:border-primary"
+                      // className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-white outline-none focus:border-secondary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input  dark:focus:border-secondary"
 
                       type="password"
                       {...register("password", { required: true })}
                       placeholder="Enter your password"
-                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-secondary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-secondary"
                     />
 
                     <span className="absolute right-4 top-4">
@@ -162,7 +162,7 @@ const SignIn: React.FC = () => {
                     </span>
                   </div>
                   {errors.password && (
-                    <p className="text-[.7rem] text-red">
+                    <p className="text-red-600 text-[.7rem]">
                       {errors.password.message}
                     </p>
                   )}
@@ -175,16 +175,19 @@ const SignIn: React.FC = () => {
                     <input
                       type="submit"
                       value="Sign In"
-                      className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
+                      className="w-full cursor-pointer rounded-lg border border-secondary bg-primary p-4 text-white transition hover:bg-opacity-90"
                     />
                   )}
                 </div>
 
                 <div className="mt-6 text-center">
-                  <p>
-                    Don’t have any account?{" "}
-                    <Link href="/auth/admin/register" className="text-primary">
-                      Sign Up
+                  <p className="text-gray-700 mt-2 text-center text-xs">
+                    {"  Vous n'avez pas encore de compte ? "}
+                    <Link
+                      href={"/sign-up"}
+                      className=" text-primary hover:underline"
+                    >
+                      Créez-en un ici.
                     </Link>
                   </p>
                 </div>

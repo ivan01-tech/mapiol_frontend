@@ -1,17 +1,13 @@
 "use client";
-import { UserType } from "@/types/users";
-import { useEffect, useLayoutEffect } from "react";
-import toast from "react-hot-toast";
 import { usePathname, useRouter } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
-import { addUserInfo, clearUser, selectUser } from "@/redux/userSlice";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
-import { getUserStatus } from "@/services/users.services";
-import { UserRoles } from "@/lib/utils";
-import Loader from "../common/Loader";
 import { useQuery } from "@tanstack/react-query";
+import { getUserStatus } from "@/services/users.services";
+import { UserType } from "@/types/users";
+import { useDispatch } from "react-redux";
+import { addUserInfo, clearUser } from "@/redux/userSlice";
 
 export default function DefaultLayout({
   children,
@@ -23,7 +19,7 @@ export default function DefaultLayout({
   const dispatch = useDispatch();
 
   const pathname = usePathname();
-  const router = useRouter();
+  // const router = useRouter();
 
   const {
     isError,
@@ -42,48 +38,28 @@ export default function DefaultLayout({
 
   // console.log("path : ", pathname);
   const areNotrotected = pathname.split("/").includes("auth");
-  // // TODO create a route for sign up and login
-  // console.log("is protected : ", areNotrotected);
 
-  // TODO create a route for sign up and login
-  useEffect(
-    function () {
-      if (isSuccess) {
-        console.log("Main layout data : ", isSuccess, dataSingUp);
+  // useEffect(
+  //   function () {
+  //     if (isError) {
+  //       // toast.error(
+  //       //   error?.message || "You nedd to be logged in to access this route",
+  //       //   );
+  //       //   router.push("/auth/signin");
 
-        if (dataSingUp.roles == UserRoles.is_admin) {
-          dispatch(addUserInfo(dataSingUp));
-        } else {
-          toast.error("this page requires the user to be an administrator");
-          return router.push("/auth/signin");
-        }
-      }
-    },
-    [isSuccess, dataSingUp, router, dispatch],
-  );
-
-  useEffect(
-    function () {
-      if (isError) {
-        // toast.error(
-        //   error?.message || "You nedd to be logged in to access this route",
-        //   );
-        //   router.push("/auth/signin");
-
-        if (!areNotrotected) {
-          dispatch(clearUser());
-          console.log("error : ", error);
-          toast.error(
-            (error as Error).message ||
-              "You need to be connected to access this route",
-          );
-          router.push("/auth/signin");
-        }
-      }
-    },
-    [dispatch, isError, error?.message, error, router, areNotrotected],
-  );
-  // const pathname = usePathname();
+  //       if (!areNotrotected) {
+  //         dispatch(clearUser());
+  //         console.log("error : ", error);
+  //         toast.error(
+  //           (error as Error).message ||
+  //             "You need to be connected to access this route",
+  //         );
+  //         router.push("/auth/signin");
+  //       }
+  //     }
+  //   },
+  //   [dispatch, isError, error?.message, error, router, areNotrotected],
+  // );
 
   // useLayoutEffect(() => {
   //   (async () => {
@@ -111,9 +87,25 @@ export default function DefaultLayout({
   //   })();
   // }, [areNotrotected, dispatch, router]);
 
-  if (isPending || isLoading || isFetching || isLoadingError || isPaused) {
-    return <Loader />;
-  }
+  // if (isPending || isLoading || isFetching || isLoadingError || isPaused) {
+  //   return <Loader />;
+  // }
+
+  useEffect(
+    function () {
+      if (isSuccess) {
+        dispatch(addUserInfo(dataSingUp));
+        return;
+      }
+
+      if (isError) {
+        dispatch(clearUser());
+        return;
+      }
+    },
+    [dataSingUp, dispatch, isError, isSuccess],
+  );
+  console.log("data : ", dataSingUp);
 
   return (
     <>

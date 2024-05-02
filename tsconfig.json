@@ -32,7 +32,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-  ],
+, "src/components/Tables/Ten"  ],
   "exclude": [
     "node_modules"
   ]

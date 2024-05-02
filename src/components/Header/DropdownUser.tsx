@@ -1,16 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useSelector } from "react-redux";
-import { selectUser } from "@/redux/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { clearUser, selectUser } from "@/redux/userSlice";
 import { useMutation } from "@tanstack/react-query";
 import { loginUser, logoutUser } from "@/services/users.services";
-import { queryClient } from "@/app/layout";
+import { ls, queryClient } from "@/app/layout";
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const user = useSelector(selectUser);
-
+const dispatch = useDispatch()
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
 
@@ -28,6 +28,9 @@ const DropdownUser = () => {
   });
 
   function logoutHandler() {
+    // TODO check it later
+    ls.clear();
+    dispatch(clearUser())
     mutate();
   }
 

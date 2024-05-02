@@ -19,7 +19,7 @@ const CheckboxFive = () => {
             }}
           />
           <div
-            className={`box mr-4 flex h-5 w-5 items-center justify-center rounded-full border border-primary ${
+            className={`box mr-4 flex h-5 w-5 items-center justify-center rounded-full border border-secondary ${
               isChecked && "!border-4"
             }`}
           >

@@ -1,5 +1,7 @@
+import { ls } from "@/app/layout";
 import { makeRequest, makeSucureRequest } from "@/lib/makeRequest";
 import { URLS } from "@/lib/url";
+import { USER_TOKEN_STORAGE } from "@/lib/utils";
 
 export async function createUser(data: Object) {
   return makeSucureRequest(URLS.USERS.CREATE, {
@@ -22,13 +24,19 @@ export async function loginUser<T>(data: Object) {
   });
 }
 
+export async function loginLanLord<T>(data: Object) {
+  return makeRequest<T>(URLS.lanloard.login, {
+    data,
+    method: "POST",
+  });
+}
+
 export async function registerUser<T>(data: Object) {
   return makeRequest<T>(URLS.USERS.REGISTER, {
     data,
     method: "POST",
   });
 }
-
 
 export async function loginAdminUser<T>(data: Object) {
   return makeRequest<T>(URLS.USERS.LOGIN, {
@@ -44,13 +52,26 @@ export async function logoutUser<T>() {
 }
 
 export async function getUserStatus<T>() {
-  return makeSucureRequest<T>(URLS.USERS.GET_STATUS, {
+  const token = ls.get(USER_TOKEN_STORAGE);
+
+  console.log("token: " + token);
+  
+  return makeRequest<T>(URLS.lanloard.GET_STATUS, {
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  });
+}
+
+export async function getAllLanloard<T>() {
+  return makeRequest<T>(URLS.lanloard.index, {
     method: "GET",
   });
 }
 
-export async function getAllUser<T>() {
-  return makeSucureRequest<T>(URLS.USERS.INDEX, {
+export async function getAllTenanat<T>() {
+  return makeRequest<T>(URLS.tenant.index, {
     method: "GET",
   });
 }
