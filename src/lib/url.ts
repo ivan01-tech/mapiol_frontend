@@ -26,6 +26,7 @@ export const URLS = {
   },
   REAL_ESTATE: {
     index: "/proprieter/",
+    show: (id: number) => "/proprieter/show/" + id,
     create: "/proprieter/create/",
   },
 

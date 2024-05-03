@@ -27,9 +27,14 @@ export async function searchProductByName<Z>(params: any) {
   });
 }
 
-
 export async function getAllRealEstate<T>() {
   return makeRequest<T>(URLS.REAL_ESTATE.index, {
+    method: "GET",
+  });
+}
+
+export async function getRealEstateByID<T>(id: number) {
+  return makeRequest<T>(URLS.REAL_ESTATE.show(id), {
     method: "GET",
   });
 }
