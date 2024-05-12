@@ -55,7 +55,7 @@ export async function getUserStatus<T>() {
   const token = ls.get(USER_TOKEN_STORAGE);
 
   console.log("token: " + token);
-  
+
   return makeRequest<T>(URLS.lanloard.GET_STATUS, {
     method: "GET",
     headers: {
@@ -72,6 +72,18 @@ export async function getAllLanloard<T>() {
 
 export async function getAllTenanat<T>() {
   return makeRequest<T>(URLS.tenant.index, {
+    method: "GET",
+  });
+}
+
+export async function getAllTenantByUserID<T>({ id }: { id: number }) {
+  return makeRequest<T>(URLS.USERS.GET_LOCATAIRES(id), {
+    method: "GET",
+  });
+}
+
+export async function getAllRealEstateByUserID<T>({ id }: { id: number }) {
+  return makeRequest<T>(URLS.REAL_ESTATE.getRealEstate(id), {
     method: "GET",
   });
 }

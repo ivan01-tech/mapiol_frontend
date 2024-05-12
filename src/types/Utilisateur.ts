@@ -40,7 +40,7 @@ export type Lanloard = {
 };
 export type Town = {
   nom: string;
-  id: string;
+  id: number;
 };
 
 export type EstateType = {
@@ -117,8 +117,8 @@ export type RealEstate = {
   img: string;
   statut: string;
   slug: string;
-  typeBien_id: number;
-  proprietaire_id:number;
+  typeBien_id: { libelle: string,id:number };
+  proprietaire_id: number;
   created_at: string;
   updated_at: string;
 };

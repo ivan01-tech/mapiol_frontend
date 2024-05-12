@@ -1,16 +1,7 @@
 import { useModal } from "@/hooks/useModal";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+
 import * as React from "react";
-import { IoMdAdd } from "react-icons/io";
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -22,7 +13,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -31,7 +21,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import ModalComp from "../ui/CustomModal";
 
 import {
   ColumnDef,
@@ -46,12 +35,10 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { formatDate } from "@/lib/utils";
-import CreateLanLoard from "../Form/CreateLanLoard";
 import { deleteLanLord } from "@/services/landlord.services";
 import toast from "react-hot-toast";
 import { queryClient } from "@/app/layout";
 import Link from "next/link";
-import Buttons from "@/app/ui/buttons/page";
 import { RealEstateTableData } from "@/app/realestates/page";
 import Image from "next/image";
 
@@ -123,7 +110,13 @@ export const columns: ColumnDef<RealEstateTableData>[] = [
     accessorKey: "image",
     header: "image",
     cell: ({ row }) => (
-      <Image alt="une image" width={50} height={50} src={""} className="" />
+      <Image
+        alt="une image"
+        width={50}
+        height={50}
+        src={row.getValue("image")}
+        className=""
+      />
     ),
   },
   {
@@ -194,7 +187,9 @@ export const columns: ColumnDef<RealEstateTableData>[] = [
               <Link href={"/realestates/" + InformationCreation.id}>Voir</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>Activate</DropdownMenuItem>
-            <DropdownMenuItem>Update</DropdownMenuItem>
+            <Link href={"/realestates/" + InformationCreation.id + "/update"}>
+              <DropdownMenuItem>Update</DropdownMenuItem>
+            </Link>
             <DropdownMenuItem
               onClick={() => handlerDeleteUser(Number(InformationCreation.id))}
             >

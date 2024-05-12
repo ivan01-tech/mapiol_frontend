@@ -1,6 +1,6 @@
 "use client";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createRealestate } from "@/services/landlord.services";
@@ -99,7 +99,7 @@ export default function CreateRealEstate({}: Props) {
         exist_salle_manger: false,
         // proprietaire_id: user?.id,
         surface: formData.surface,
-        images: imagesUrl,
+        img: imagesUrl,
       })
         .then((resp) => {
           console.log("response: ", resp.slug);
@@ -124,6 +124,31 @@ export default function CreateRealEstate({}: Props) {
 
   const booleanKeysArry = Object.entries(schemaRealEstate.shape).filter(
     ([prev]) => booleanKeys.includes(prev),
+  );
+// set default values on somes properties
+  useEffect(
+    function () {
+      if (landlords && landlords.length > 0) {
+        setValue("proprietaire_id", landlords[0].id);
+      }
+    },
+    [landlords, setValue],
+  );
+  useEffect(
+    function () {
+      if (towns && towns.length > 0) {
+        setValue("ville_id", towns[0].id);
+      }
+    },
+    [landlords, setValue, towns],
+  );
+  useEffect(
+    function () {
+      if (typeEstate && typeEstate.length > 0) {
+        setValue("typeBien_id", typeEstate[0].id);
+      }
+    },
+    [typeEstate, setValue],
   );
 
   return (
@@ -504,7 +529,7 @@ export default function CreateRealEstate({}: Props) {
                 />
                 {/* end images */}
                 {/* the map section */}
-                <div className="m-8 flex h-[300px] w-full items-center justify-center overflow-hidden">
+                {/* <div className="m-8 flex h-[300px] w-full items-center justify-center overflow-hidden">
                   <MapContainer
                     center={[51.505, -0.09]}
                     zoom={13}
@@ -520,7 +545,7 @@ export default function CreateRealEstate({}: Props) {
                       </Popup>
                     </Marker>
                   </MapContainer>
-                </div>
+                </div> */}
                 {/* end map section */}
                 <div className="flex flex-col gap-4 rounded border border-stroke p-3">
                   <h2 className="text-center text-title-md font-bold uppercase">

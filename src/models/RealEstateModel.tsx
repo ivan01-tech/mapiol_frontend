@@ -1,3 +1,32 @@
+
+import {
+  FaUtensils,
+  FaCar,
+  FaWifi,
+  FaTv,
+  FaBed,
+  FaHome,
+  FaFire,
+  FaBath,
+  FaTree,
+  FaArrowsAltV,
+  FaBookOpen,
+  FaBuilding,
+  FaHospital,
+  FaPhoneAlt,
+  FaSatelliteDish,
+  FaSink,
+  FaThermometerHalf,
+  FaTshirt,
+  FaUserShield,
+  FaFireExtinguisher,
+} from "react-icons/fa";
+import {
+  RiBuilding2Fill,
+  RiHotelBedFill,
+  RiParkingBoxFill,
+  RiRestaurantFill,
+} from "react-icons/ri";
 import { object, string, number, boolean, z } from "zod";
 
 export const schemaRealEstate = object({
@@ -38,7 +67,7 @@ export const schemaRealEstate = object({
   pc_ascenseur: boolean().default(true),
   dep_lavevaiselle: boolean().default(true),
 });
-
+// {exist_salle_manger:"existe til une salle a manger ?"}
 export const booleanKeys = [
   "exist_salle_manger",
   "ungarage",
@@ -65,35 +94,6 @@ export const booleanKeys = [
   "dep_lavevaiselle",
 ];
 
-
-import {
-  FaUtensils,
-  FaCar,
-  FaWifi,
-  FaTv,
-  FaBed,
-  FaHome,
-  FaFire,
-  FaBath,
-  FaTree,
-  FaArrowsAltV,
-  FaBookOpen,
-  FaBuilding,
-  FaHospital,
-  FaPhoneAlt,
-  FaSatelliteDish,
-  FaSink,
-  FaThermometerHalf,
-  FaTshirt,
-  FaUserShield,
-  FaFireExtinguisher,
-} from "react-icons/fa";
-import {
-  RiBuilding2Fill,
-  RiHotelBedFill,
-  RiParkingBoxFill,
-  RiRestaurantFill,
-} from "react-icons/ri";
 
 const icons = {
   exist_salle_manger: <FaUtensils />, 

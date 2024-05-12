@@ -5,6 +5,7 @@ export const URLS = {
     REGISTER: "/users/register",
     LOGIN: "/users/login",
     CREATE_LOGIN: "/users/createAndLogin",
+    GET_LOCATAIRES: (id: number) => `/utilisateurs/getLocataires/${id}`,
     GET_STATUS: "/user/checkAuth",
   },
   COUNTRY: {
@@ -20,6 +21,7 @@ export const URLS = {
     index: "/utilisateurs/",
     GET_STATUS: "/utilisateur/CheckAuth",
     login: "/utilisateurs/login/",
+
     create: "/utilisateurs/create/",
     CREATE_LOGIN: "/utilisateurs/create_and_login/",
     delete: (id: number) => "/utilisateurs/delete/" + id + "/",
@@ -27,6 +29,9 @@ export const URLS = {
   REAL_ESTATE: {
     index: "/proprieter/",
     show: (id: number) => "/proprieter/show/" + id,
+    getRealEstate: (id: number) =>
+      `/proprieter/showForProprietaire/${id}`,
+
     create: "/proprieter/create/",
   },
 

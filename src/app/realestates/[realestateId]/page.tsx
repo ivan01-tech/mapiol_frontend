@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 "use client";
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/no-unescaped-entities */
@@ -83,8 +84,10 @@ function RealEstateDetails({}: Props) {
     );
   }
 
-  console.log("data : ", product);
-  const images = JSON.parse(product.img) as unknown as string[];
+  const images = (JSON.parse(product.img) as unknown as { url: string }[]).map(
+    (image) => image.url,
+  );
+  console.log("data  ", product);
   return (
     <DefaultLayout>
       <div className="flex justify-between">
@@ -141,9 +144,9 @@ function RealEstateDetails({}: Props) {
                     className="border-gray-800 rounded-xl  border-2 p-4"
                     key={image}
                   >
-                    <CustomImage
+                    <img
                       className="hover:border-gray-800 w-24 cursor-pointer border-2"
-                      path={"/images/cards/cards-03.png"}
+                      src={image}
                     />
                   </div>
                 );
@@ -155,7 +158,7 @@ function RealEstateDetails({}: Props) {
               {product.nom}
             </h2>
             <div className="mt-6 flex flex-wrap gap-4">
-              <p className="text-4xl font-bold text-[#333]">XAF {"123"}</p>
+              <p className="text-4xl font-bold text-[#333]">XAF {"123 000"}</p>
             </div>
             <div className="my-4 flex flex-wrap items-center gap-3">
               <div
@@ -168,7 +171,7 @@ function RealEstateDetails({}: Props) {
                   ][Math.floor(Math.random() * 4)]
                 }`}
               >
-                <p> {"123"}</p>
+                <p> {product.typeBien_id.libelle}</p>
               </div>
             </div>
 
@@ -191,7 +194,7 @@ function RealEstateDetails({}: Props) {
                   )} */}
             </div>
 
-            <div className="mt-14 h-full w-full rounded-lg border bg-white p-6 shadow-md">
+            {/* <div className="mt-14 h-full w-full rounded-lg border bg-white p-6 shadow-md">
               <div className="my-3 flex justify-between">
                 <p className="text-gray-700">Quantité</p>
                 <div className="border-gray-100 flex items-center">
@@ -237,7 +240,7 @@ function RealEstateDetails({}: Props) {
                   </button>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -277,7 +280,7 @@ function RealEstateDetails({}: Props) {
           </div>
         </div>
       </div> */}
-
+      {/* TODO build the object and render properties */}
       <div className="flex flex-col gap-4 rounded border border-stroke p-3">
         <h2 className="text-center text-title-md font-bold uppercase">
           Carcteristiques
