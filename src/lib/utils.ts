@@ -31,5 +31,9 @@ export const colors = {
 
 export const USER_TOKEN_STORAGE = "mapiol_token";
 
+export const FIREBASE_IMAGES_FOLDER = "mapiol_images/";
 
-export const FIREBASE_IMAGES_FOLDER  = "mapiol_images/"
+export enum EuserStatus {
+  "Active" = "Actif",
+  "Inactive" = "Inactif",
+}

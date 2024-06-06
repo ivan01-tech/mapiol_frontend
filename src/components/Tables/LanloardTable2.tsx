@@ -45,13 +45,14 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { formatDate } from "@/lib/utils";
+import { EuserStatus, formatDate } from "@/lib/utils";
 import CreateLanLoard from "../Form/CreateLanLoard";
 import { deleteLanLord } from "@/services/landlord.services";
 import toast from "react-hot-toast";
 import { queryClient } from "@/app/layout";
 import Link from "next/link";
-import Buttons from "@/app/ui/buttons/page";
+import { useMutation } from "@tanstack/react-query";
+import { changeUserStatus } from "@/services/users.service";
 
 const handlerDeleteUser = async (user: number) => {
   deleteLanLord<any>(user)
@@ -265,10 +266,28 @@ export const columns: ColumnDef<{
               View details
             </DropdownMenuItem> */}
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Activate</DropdownMenuItem>
+            <Button
+              onClick={async () => {
+                await changeUserStatus(InformationCreation.id, {
+                  statut:
+                    InformationCreation.statut == EuserStatus.Active.toString()
+                      ? EuserStatus.Inactive.toString()
+                      : EuserStatus.Active.toString(),
+                });
+              }}
+            >
+              <DropdownMenuItem>
+                {InformationCreation.statut.trim() ==
+                EuserStatus.Active.toString()
+                  ? "Desactivate"
+                  : "Activate"}
+              </DropdownMenuItem>
+            </Button>
             <DropdownMenuItem>
               <Link
-                href={"/users/landlords/" + InformationCreation.id + "/update"}
+                href={
+                  "/users/landlords/" + InformationCreation.slug + "/update"
+                }
               >
                 Update
               </Link>
@@ -305,6 +324,32 @@ type Props = {
 };
 
 export function LanloardDataTable({ data: dataTable }: Props) {
+  // // change user status
+  // const {
+  //   mutateAsync,
+  //   isError,
+  //   isSuccess,
+  //   isPending,
+  //   error,
+  //   data: dataSingUp,
+  // } = useMutation({
+  //   mutationFn: changeUserStatus<any>,
+  //   mutationKey: ["changeUserStatus"],
+  // });
+
+  // const changeUserStatusFoo = (value: EuserStatus) => {
+  //   mutateAsync({ status: value })
+  //     .then((resp) => {
+  //       console.log("first form : ", resp);
+
+  //       toast.success("Successfully changed !");
+  //     })
+  //     .catch((err) => {
+  //       toast.error(err?.message || "Something went wrong !");
+  //     });
+  // };
+
+  //
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],

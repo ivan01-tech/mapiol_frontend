@@ -78,7 +78,7 @@ export default function CreateRealEstate({}: Props) {
     register,
     setValue,
     control,
-
+    reset,
     trigger,
     handleSubmit,
     formState: { errors },
@@ -168,18 +168,21 @@ export default function CreateRealEstate({}: Props) {
     mutateAsyncFoo(Number(path))
       .then((res) => {
         if (res) {
-          schemaRealEstate.default({
-            ...res,
-            typeBien_id: res.typeBien_id.id,
-            ville_id: Number(res.ville_id),
-          });
+          // delete res?.slug;
+          // delete res?.statut;
+          // delete res?.img;
+          // delete res?.created_at;
+          // delete res?.updated_at;
+          // delete res?.id;
+          reset(res);
         }
       })
       .catch((err) => {
         err &&
           toast.error(err?.name + err?.message || "Something went wrong!   ");
       });
-  }, [mutateAsyncFoo, path]);
+  }, [mutateAsyncFoo, path, reset]);
+
   console.log("default : ", product);
   if (isPending) {
     return (

@@ -1,50 +1,91 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { LanlordInput } from "@/models/CreateLanlordModel";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
-import { createLanloard } from "@/services/landlord.services";
+import { updateLanLord, getLanlordByID } from "@/services/landlord.services";
 import { Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { Lanloard } from "@/types/Utilisateur";
 
-type Props = {};
-export default function CreateLanLoard({}: Props) {
+export default function UpdateLandLordFoo() {
   const {
     isError,
     isSuccess,
     isPending,
     error,
-    mutateAsync,
+    mutateAsync: updateLandLordFoo,
     data: usersData,
   } = useMutation({
-    mutationFn: createLanloard<any>,
-    mutationKey: ["createLanloard"],
+    mutationKey: ["updateLanLordusersData"],
+    mutationFn: updateLanLord,
   });
+
+  const { mutateAsync, data: userDataGet } = useMutation({
+    mutationFn: getLanlordByID<Lanloard>,
+    mutationKey: ["getLanlordByID"],
+  });
+
   const {
     register,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm<LanlordInput>();
-  const router = useRouter();
-  const onSubmit = (data: LanlordInput) => {
-    console.log(data);
-    try {
-      mutateAsync(data)
-        .then((resp) => {
-          console.log("response: ", resp.slug);
-          toast.success("Success!");
-          router.back();
-        })
-        .catch((err) => {
-          toast.error(err.message || error?.message);
-          console.log("response: ", err);
-        });
-    } catch (e) {}
+
+  const pathname = usePathname()?.split("/");
+
+  const path = pathname ? pathname[pathname?.length - 2] : null;
+
+  console.log("path : ", path, pathname);
+
+  const onSubmit = (data: { [key: string]: string }) => {
+    console.log("were calle agin : ", data);
+    updateLandLordFoo({
+      id: userDataGet?.id!,
+      data: {
+        email: data.email,
+        password: data.password,
+        nom: data.nom,
+        telephone: data.telephone,
+        addresse: data.addresse,
+        sexe: data.sexe,
+        slug: data.slug,
+      },
+    })
+      .then((resp) => {
+        reset(resp);
+        console.log("==================: ", resp);
+        toast.success("Success!");
+        // router.back();
+      })
+      .catch((err) => {
+        toast.error(err.message || error?.message);
+        console.log("response: ", err);
+      });
   };
+
+  useEffect(
+    function () {
+      console.log("first response : ", path);
+      if (path) {
+        mutateAsync(path)
+          .then((resp) => {
+            console.log("==================: ", resp);
+            reset(resp);
+          })
+          .catch((err) => {
+            toast.error(err.message || err?.message);
+            console.log("response: ", err);
+          });
+      }
+    },
+    [mutateAsync, path, reset],
+  );
 
   return (
     <DefaultLayout>
@@ -56,9 +97,10 @@ export default function CreateLanLoard({}: Props) {
         <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <div className="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
             <h3 className="font-medium text-black dark:text-white">
-              Créer un Proprietaire
+              Mettre Le Proprietaire
             </h3>
           </div>
+          {/* <form> */}
           <form onSubmit={handleSubmit(onSubmit)}>
             {isError && (
               <div className="m-3 flex w-full p-4 text-center">
@@ -68,7 +110,7 @@ export default function CreateLanLoard({}: Props) {
 
             {isSuccess && (
               <div className="m-3 flex w-full p-4 text-center">
-                <p className="text-green-700">{"Successfully created !"}</p>
+                <p className="text-green-700">{"Successfully updated !"}</p>
               </div>
             )}
             <div className="w-full p-6.5">
@@ -209,7 +251,7 @@ export default function CreateLanLoard({}: Props) {
                 {isPending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Patientez...
+                    Patientedata.email.
                   </>
                 ) : (
                   "Créer"

@@ -45,22 +45,20 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { formatDate } from "@/lib/utils";
+import { EuserStatus, formatDate } from "@/lib/utils";
 import CreateLanLoard from "../Form/CreateLanLoard";
 import { deleteLanLord } from "@/services/landlord.services";
 import toast from "react-hot-toast";
 import { queryClient } from "@/app/layout";
 import Link from "next/link";
 import Buttons from "@/app/ui/buttons/page";
+import { changeUserStatus } from "@/services/users.service";
 
 const handlerDeleteUser = async (user: number) => {
   deleteLanLord<any>(user)
     .then((res) => {
       console.log("user deleted : ", res);
       toast.success("User deleted !");
-      queryClient.invalidateQueries({
-        queryKey: ["getAllUser"],
-      });
     })
     .catch((err) => {
       toast.error(err.message || "Something went wrong !");
@@ -265,8 +263,30 @@ export const columns: ColumnDef<{
               View details
             </DropdownMenuItem> */}
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Activate</DropdownMenuItem>
-            <DropdownMenuItem>Update</DropdownMenuItem>
+            <Button
+              onClick={async () => {
+                await changeUserStatus(InformationCreation.id, {
+                  statut:
+                    InformationCreation.statut == EuserStatus.Active.toString()
+                      ? EuserStatus.Inactive.toString()
+                      : EuserStatus.Active.toString(),
+                });
+              }}
+            >
+              <DropdownMenuItem>
+                {InformationCreation.statut.trim() ==
+                EuserStatus.Active.toString()
+                  ? "Desactivate"
+                  : "Activate"}
+              </DropdownMenuItem>
+            </Button>
+            <DropdownMenuItem>
+              <Link
+                href={"/users/tenants/" + InformationCreation.slug + "/update"}
+              >
+                Update
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => handlerDeleteUser(Number(InformationCreation.id))}
             >

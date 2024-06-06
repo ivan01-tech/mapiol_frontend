@@ -47,7 +47,7 @@ export default function SignInAccount() {
 
     mutateAsync(user)
       .then((resp) => {
-        console.log("response: ", resp.slug);
+        console.log("response: ", resp?.slug);
         dispatch(
           addUserInfo({
             // TODO

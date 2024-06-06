@@ -3,6 +3,7 @@ export const URLS = {
     CREATE: "/users",
     INDEX: "/users",
     REGISTER: "/users/register",
+    CHANGE_STATUS: (id: number) => "/utilisateurs/editStatus/" + id,
     LOGIN: "/users/login",
     CREATE_LOGIN: "/users/createAndLogin",
     GET_LOCATAIRES: (id: number) => `/utilisateurs/getLocataires/${id}`,
@@ -19,18 +20,19 @@ export const URLS = {
   },
   lanloard: {
     index: "/utilisateurs/",
-    GET_STATUS: "/utilisateur/CheckAuth",
+    GET_STATUS: "/utilisateur/CheckAuth/",
     login: "/utilisateurs/login/",
-
+    get_id: (id: number) => `/utilisateurs/showById/${id}/`,
+    get_slug: (id: string) => `/utilisateurs/showBySlug/${id}/`,
     create: "/utilisateurs/create/",
+    update: (id: number) => "/utilisateurs/edit/" + id,
     CREATE_LOGIN: "/utilisateurs/create_and_login/",
     delete: (id: number) => "/utilisateurs/delete/" + id + "/",
   },
   REAL_ESTATE: {
     index: "/proprieter/",
     show: (id: number) => "/proprieter/show/" + id,
-    getRealEstate: (id: number) =>
-      `/proprieter/showForProprietaire/${id}`,
+    getRealEstate: (id: number) => `/proprieter/showForProprietaire/${id}`,
 
     create: "/proprieter/create/",
   },

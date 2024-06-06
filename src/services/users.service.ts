@@ -1,4 +1,4 @@
-import { makeSucureRequest } from "@/lib/makeRequest";
+import { makeRequest, makeSucureRequest } from "@/lib/makeRequest";
 import { URLS } from "@/lib/url";
 
 export async function registerUser<T = any>(data: Object) {
@@ -15,6 +15,13 @@ export async function loginUser<T = any>(data: Object) {
   })
     .then((res) => res)
     .catch((err) => err);
+}
+
+export async function changeUserStatus<T = any>(id: number, data: Object) {
+  return makeSucureRequest<T>(URLS.USERS.CHANGE_STATUS(id), {
+    data,
+    method: "PUT",
+  });
 }
 
 export async function createUserAndLogin<T = any>(data: Object) {

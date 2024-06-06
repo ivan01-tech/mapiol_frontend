@@ -79,7 +79,6 @@ type U = {
 };
 
 export type RealEstate = {
-  id: number;
   nom: string;
   typemouvement: string;
   nbrchambre: number;
@@ -114,11 +113,15 @@ export type RealEstate = {
   exist_sous_sol: boolean;
   anneeconstruction: string;
   nbr_salle_bain: boolean;
-  img: string;
-  statut: string;
-  slug: string;
-  typeBien_id: { libelle: string,id:number };
+  typeBien_id: { libelle: string; id: number };
   proprietaire_id: number;
+
+  slug: string;
+  statut: string;
+  img: string;
   created_at: string;
   updated_at: string;
+  id: number;
+
+  //
 };

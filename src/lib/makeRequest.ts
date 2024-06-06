@@ -6,6 +6,7 @@ type BackendError = {
   [key: string]: string[];
 };
 const representBackendErrors = (errors: BackendError): string[] => {
+  console.log("errors: ", errors);
   return Object.entries(errors).flatMap(([key, messages]) => {
     return messages.map((message) => `${key}: ${message}`);
   });
@@ -13,9 +14,11 @@ const representBackendErrors = (errors: BackendError): string[] => {
 
 // Transformer les erreurs en une chaîne représentative
 const stringifyBackendErrors = (errors: BackendError): string => {
-  const errorStrings = representBackendErrors(errors);
+  const errorStrings =
+    typeof errors == "string" ? [errors] : representBackendErrors(errors);
   return errorStrings.join("\n");
 };
+
 export interface RequestRetturn<W> {
   statusCode: number;
   token?: number;
@@ -43,7 +46,7 @@ export async function makeSucureRequest<T = any>(
       return data;
     })
     .catch((err: AxiosError) => {
-      console.log("data erro r : ", err.response?.data);
+      console.log("data erro r : ", err);
       const error = err?.response?.data as
         | { error: BackendError }
         | null
